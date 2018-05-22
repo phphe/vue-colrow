@@ -1,6 +1,6 @@
 {
   "name": "vue-smart-layout-assistant",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vue smart layout component",
   "main": "dist/vue-smart-layout-assistant.cjs.js",
   "module": "dist/vue-smart-layout-assistant.es.js",
