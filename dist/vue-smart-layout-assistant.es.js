@@ -1,9 +1,18 @@
 /*!
- * vue-smart-layout-assistant v1.0.2
+ * vue-smart-layout-assistant v1.0.3
  * (c) 2018-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
 import { isArray, arrayLast, hasClass, onDOM, offDOM } from 'helper-js';
+
+// get vue prop, return true when it is ''
+function prop(vm, name) {
+  if (vm[name] === '') {
+    return true;
+  }
+
+  return vm[name];
+}
 
 var Row = {
   render: function render() {
@@ -151,7 +160,7 @@ var Row = {
             }
           };
 
-          if (col.sameWidth) {
+          if (prop(col, 'sameWidth')) {
             if (sameWidthStore[col.sameWidth]) {
               var sameCols = sameWidthStore[col.sameWidth];
               sameCols.push(col);
@@ -220,8 +229,8 @@ var Row = {
         var sorted = []; // without fixed, same-width
 
         row.forEach(function (col, i) {
-          if (col.fixed) {//
-          } else if (!col.sameWidth) {
+          if (prop(col, 'fixed')) {//
+          } else if (!prop(col, 'sameWidth')) {
             sorted.push(col);
             col._colIndex = i;
           }
@@ -249,7 +258,7 @@ var Row = {
         for (var _i3 = 0; _i3 < sorted.length; _i3++) {
           var col = sorted[_i3];
 
-          if (col.sameWidth) {
+          if (prop(col, 'sameWidth')) {
             var swn = col.sameWidth; // 'same width' name
 
             if (sameWidthIgnoreColNames[swn]) {

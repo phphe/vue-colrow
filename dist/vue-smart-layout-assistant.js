@@ -1,5 +1,5 @@
 /*!
- * vue-smart-layout-assistant v1.0.2
+ * vue-smart-layout-assistant v1.0.3
  * (c) 2018-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -408,6 +408,15 @@
     return CrossWindow;
   }(EventProcessor);
 
+  // get vue prop, return true when it is ''
+  function prop(vm, name) {
+    if (vm[name] === '') {
+      return true;
+    }
+
+    return vm[name];
+  }
+
   var Row = {
     render: function render() {
       var _vm = this;
@@ -554,7 +563,7 @@
               }
             };
 
-            if (col.sameWidth) {
+            if (prop(col, 'sameWidth')) {
               if (sameWidthStore[col.sameWidth]) {
                 var sameCols = sameWidthStore[col.sameWidth];
                 sameCols.push(col);
@@ -623,8 +632,8 @@
           var sorted = []; // without fixed, same-width
 
           row.forEach(function (col, i) {
-            if (col.fixed) {//
-            } else if (!col.sameWidth) {
+            if (prop(col, 'fixed')) {//
+            } else if (!prop(col, 'sameWidth')) {
               sorted.push(col);
               col._colIndex = i;
             }
@@ -652,7 +661,7 @@
           for (var _i3 = 0; _i3 < sorted.length; _i3++) {
             var col = sorted[_i3];
 
-            if (col.sameWidth) {
+            if (prop(col, 'sameWidth')) {
               var swn = col.sameWidth; // 'same width' name
 
               if (sameWidthIgnoreColNames[swn]) {

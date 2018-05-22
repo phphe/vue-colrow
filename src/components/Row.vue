@@ -108,7 +108,7 @@ export default {
             col.cssWidth = w
           }
         }
-        if (col.sameWidth) {
+        if (ut.prop(col, 'sameWidth')) {
           if (sameWidthStore[col.sameWidth]) {
             const sameCols = sameWidthStore[col.sameWidth]
             sameCols.push(col)
@@ -147,9 +147,9 @@ export default {
         let restW = rowWidth // rest width; 递减后剩余宽度
         const sorted = [] // without fixed, same-width
         row.forEach((col, i) => {
-          if (col.fixed) {
+          if (ut.prop(col, 'fixed')) {
             //
-          } else if (!col.sameWidth) {
+          } else if (!ut.prop(col, 'sameWidth')) {
             sorted.push(col)
             col._colIndex = i
           }
@@ -169,7 +169,7 @@ export default {
         sorted.reverse()
         const sameWidthIgnoreColNames = {} //
         for (const col of sorted) {
-          if (col.sameWidth) {
+          if (ut.prop(col, 'sameWidth')) {
             const swn = col.sameWidth // 'same width' name
             if (sameWidthIgnoreColNames[swn]) {
               continue
