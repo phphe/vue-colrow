@@ -14,8 +14,12 @@
       .box.red
     Col(:xs="0.5")
       .box.red
-    //- Col(:width="0.5")
-    //-   .box.red
+    Col(:width="0.5")
+      .box.red
+    Col(:width="0.5")
+      .box.red
+    Col(:width="0.5")
+      .box.yellow
 </template>
 
 <script>

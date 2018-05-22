@@ -92,6 +92,7 @@ export default {
         }
         const id = el.getAttribute('data-vm-id')
         const col = this.colsMapping[id]
+        col.isFirstCol = false
         col.isLastCol = false
         col.isLastRow = false
         //
@@ -225,5 +226,8 @@ export default {
   > br{
     display: none;
   }
+}
+.clearfix{
+  clear: both;
 }
 </style>

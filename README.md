@@ -1,27 +1,49 @@
 # vue-smart-layout-assistant
 
-> A Vue.js project
+> Vue smart layout component
 
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run all tests
-npm test
+## install
+```sh
+npm install vue-smart-layout-assistant
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+```js
+import {Row, Col} from 'vue-smart-layout-assistant'
+Vue.component('Row', Row)
+Vue.component('Col', Col)
+```
+## usage
+```html
+<Row>
+  <Col :width="500">
+    <h2>main area</h2>
+  </Col>
+  <Col :width="300">
+    <h2>right sidebar</h2>
+  </Col>
+</Row>
+```
+## api
+### Row props
+```js
+gutter: {default: 16, type: [Number, Array]} // unit: px. You can specify the column spacing for the x and y axes by ayyay([x, y])
+```
+### Row methods
+```js
+update() // when window size changed, it will auto update. Sometimes you need to call it manually.
+```
+### Row slot
+```js
+default // only one slot. The slot children can only be Col and br
+```
+### Col props
+```js
+width: {default: 0.1, type: Number}, // when width less than or equal to 1, it will be consider as percentage, or px width
+fixed: {default: false}, // fixed col won't grow to fill rest space
+grow: {}, // grow priority, the left columns have higher priority; 扩展的优先级, 靠前的更优先
+sameWidth: {}, // cols with same value will be set same width
+// same to width. responsive
+xs: {type: Number},
+sm: {type: Number},
+md: {type: Number},
+lg: {type: Number},
+```
