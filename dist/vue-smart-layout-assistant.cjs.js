@@ -1,5 +1,5 @@
 /*!
- * vue-smart-layout-assistant v1.0.0
+ * vue-smart-layout-assistant v1.0.2
  * (c) 2018-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
