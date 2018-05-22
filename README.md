@@ -22,6 +22,8 @@ Vue.component('Col', Col)
   </Col>
 </Row>
 ```
+## break row
+It can auto break row by width. You can break row manually with <br />
 ## api
 ### Row props
 ```js
