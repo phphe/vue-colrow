@@ -1,6 +1,6 @@
 # vue-smart-layout-assistant
 
-> Vue smart layout component
+> Vue smart layout component - [demo](https://codepen.io/phphe/pen/KREQXa)
 
 ## install
 ```sh
