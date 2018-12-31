@@ -1,5 +1,5 @@
 <template lang="pug">
-.layout-col(:style="[$parent.colStyle, colStyle]" :data-vm-id="vmId")
+.cr-col(:style="[$parent.colStyle, colStyle]" :data-vm-id="vmId")
   slot
 </template>
 
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style>
-.layout-col{
+.cr-col{
   float: left;
 }
 </style>

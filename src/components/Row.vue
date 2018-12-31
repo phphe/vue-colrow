@@ -1,6 +1,6 @@
 <template lang="pug">
-.layout-row(:class="{'layout-row-uninited': !inited}")
-  .layout-row-inner(ref="inner")
+.cr-row(:class="{'cr-row-uninited': !inited}")
+  .cr-row-inner(ref="inner")
     slot
     .clearfix
 </template>
@@ -83,7 +83,7 @@ export default {
           currentRow = null
           continue
         }
-        if (!hp.hasClass(el, 'layout-col')) {
+        if (!hp.hasClass(el, 'cr-col')) {
           continue
         }
         if (!currentRow) {
@@ -222,12 +222,12 @@ export default {
 </script>
 
 <style>
-.layout-row{
+.cr-row{
 }
-.layout-row-uninited{
+.cr-row-uninited{
   visibility: hidden;
 }
-.layout-row-inner > br{
+.cr-row-inner > br{
   display: none;
 }
 .clearfix{
