@@ -1,14 +1,16 @@
-# vue-smart-layout-assistant
+# vue-colrow
 
-> Vue smart layout component
+> Components Col and Row are dedicated to layout normal and responsive web page easily.
+
+> Renamed from vue-smart-layout-assistant
 
 ## install
 ```sh
-npm install vue-smart-layout-assistant
+npm install vue-colrow
 ```
 ```js
-import {Row, Col} from 'vue-smart-layout-assistant'
-import 'vue-smart-layout-assistant/dist/vue-smart-layout-assistant.css'
+import {Row, Col} from 'vue-colrow'
+import 'vue-colrow/dist/vue-colrow.css'
 Vue.component('Row', Row)
 Vue.component('Col', Col)
 ```
@@ -24,7 +26,10 @@ Vue.component('Col', Col)
 </Row>
 ```
 ## break row
-It can auto break row by width. You can break row manually with <br />
+It can auto break row by width. You can break row manually with:
+```html
+<br>
+```
 ## api
 ### Row props
 ```js
@@ -32,7 +37,7 @@ gutter: {default: 16, type: [Number, Array]} // unit: px. You can specify the co
 ```
 ### Row methods
 ```js
-update() // when window size changed, it will auto update. Sometimes you need to call it manually.
+update() // when window size changed, it will auto update. In other cases, you need to call it manually.
 ```
 ### Row slot
 ```js
@@ -50,3 +55,5 @@ sm: {type: Number},
 md: {type: Number},
 lg: {type: Number},
 ```
+### Important
+Don't set margin, width, float, absolute or fixed position of a col.

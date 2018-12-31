@@ -1,5 +1,5 @@
 <template lang="pug">
-.layout-row
+.layout-row(:class="{'layout-row-uninited': !inited}")
   .layout-row-inner(ref="inner")
     slot
     .clearfix
@@ -7,7 +7,7 @@
 
 <script>
 import * as hp from 'helper-js'
-import * as ut from '../utils.js'
+import * as vf from 'vue-functions'
 
 export default {
   props: {
@@ -21,6 +21,7 @@ export default {
       gutterX: null,
       gutterY: null,
       colsMapping: {},
+      inited: false,
     }
   },
   computed: {
@@ -108,7 +109,7 @@ export default {
             col.cssWidth = w
           }
         }
-        if (ut.prop(col, 'sameWidth')) {
+        if (vf.isPropTrue(col.sameWidth)) {
           if (sameWidthStore[col.sameWidth]) {
             const sameCols = sameWidthStore[col.sameWidth]
             sameCols.push(col)
@@ -147,9 +148,9 @@ export default {
         let restW = rowWidth // rest width; 递减后剩余宽度
         const sorted = [] // without fixed, same-width
         row.forEach((col, i) => {
-          if (ut.prop(col, 'fixed')) {
+          if (vf.isPropTrue(col.fixed)) {
             //
-          } else if (!ut.prop(col, 'sameWidth')) {
+          } else if (!vf.isPropTrue(col.sameWidth)) {
             sorted.push(col)
             col._colIndex = i
           }
@@ -169,7 +170,7 @@ export default {
         sorted.reverse()
         const sameWidthIgnoreColNames = {} //
         for (const col of sorted) {
-          if (ut.prop(col, 'sameWidth')) {
+          if (vf.isPropTrue(col.sameWidth)) {
             const swn = col.sameWidth // 'same width' name
             if (sameWidthIgnoreColNames[swn]) {
               continue
@@ -212,6 +213,7 @@ export default {
     this.$watch('gutterY', this.update)
     this.$watch('width', this.update)
     this.update()
+    this.inited = true
   },
   beforeDestroy() {
     hp.offDOM(window, 'resize', this.updateWidth)
@@ -219,13 +221,14 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .layout-row{
 }
-.layout-row-inner{
-  > br{
-    display: none;
-  }
+.layout-row-uninited{
+  visibility: hidden;
+}
+.layout-row-inner > br{
+  display: none;
 }
 .clearfix{
   clear: both;
