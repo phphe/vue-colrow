@@ -10,6 +10,7 @@ import * as hp from 'helper-js'
 import * as vf from 'vue-functions'
 
 export default {
+  isColRow_row: true,
   props: {
     gutter: {default: 16, type: [Number, Array]},
   },
@@ -43,6 +44,17 @@ export default {
       this.gutterX = t[0]
       this.gutterY = t[1]
     },
+    getColWidthProp(col) {
+      if (col.width === 'auto') {
+        if (vf.isPropTrue(col.grow)) {
+          return '1px'
+        } else {
+          return 1
+        }
+      } else {
+        return col.width
+      }
+    },
     // get responsive width
     getColCurrentPropWidth(col) {
       const w = window.innerWidth
@@ -54,14 +66,15 @@ export default {
         }
         return hp.arrayLast(arr)
       }
+      const cw = this.getColWidthProp(col)
       if (w < 768) {
-        return prioritized(col.xs, col.width)
+        return prioritized(col.xs, cw)
       } else if (w < 992) {
-        return prioritized(col.sm, col.width)
+        return prioritized(col.sm, cw)
       } else if (w < 1200) {
-        return prioritized(col.md, col.sm, col.width)
+        return prioritized(col.md, col.sm, cw)
       } else {
-        return prioritized(col.lg, col.md, col.sm, col.width)
+        return prioritized(col.lg, col.md, col.sm, cw)
       }
     },
     // find last col, row
@@ -83,7 +96,7 @@ export default {
           currentRow = null
           continue
         }
-        if (!hp.hasClass(el, 'cr-col')) {
+        if (hp.hasClass(el, 'clearfix')) {
           continue
         }
         if (!currentRow) {
@@ -99,9 +112,16 @@ export default {
         //
         let cw // col width. _realWidth. contain margin
         const setCw = (col, w) => {
-          if (w < 1) {
-            // width is proportion; 小于1的是比例
-            cw = rowWidth * w
+          let isPx
+          if (hp.isString(w)) {
+            if (w.endsWith('px')) {
+              isPx = true
+            }
+            w = parseFloat(w)
+          }
+          if (!isPx && w <= 1) {
+            // width is proportion; 小于等于1的是比例
+            cw = parseInt(rowWidth * w)
             col.cssWidth = cw - this.gutterX
           } else {
             // width is px; 指定像素
@@ -126,6 +146,7 @@ export default {
         col._realWidth = cw
         raw += cw
         if (raw > rowWidth) {
+          console.log(raw, rowWidth);
           currentRow = [col]
           rows.push(currentRow)
           raw = cw
@@ -146,9 +167,9 @@ export default {
         hp.arrayLast(row).isLastCol = true
         // sort
         let restW = rowWidth // rest width; 递减后剩余宽度
-        const sorted = [] // without fixed, same-width
+        const sorted = [] // with `grow`, without `same-width`
         row.forEach((col, i) => {
-          if (vf.isPropTrue(col.fixed)) {
+          if (!vf.isPropTrue(col.grow)) {
             //
           } else if (!vf.isPropTrue(col.sameWidth)) {
             sorted.push(col)
@@ -193,6 +214,19 @@ export default {
       hp.arrayLast(rows).forEach(col => {
         col.isLastRow = true
       })
+      // recurse children row to updateWidth
+      const recurse = (cpt) => {
+        for (const child of cpt.$children) {
+          if (child.$options.isColRow_row) {
+            child.updateWidth()
+          } else {
+            recurse(child)
+          }
+        }
+      }
+      this.$nextTick(() => {
+        recurse(this)
+      })
     },
     registerCol(colVm) {
       this.colsMapping[colVm._uid] = colVm
@@ -207,16 +241,23 @@ export default {
   mounted() {
     this.mounted = true
     this.updateWidth()
-    hp.onDOM(window, 'resize', this.updateWidth)
     this.$watch('gutter', this.updateGutter, {deep: true, immediate: true})
     this.$watch('gutterX', this.update)
     this.$watch('gutterY', this.update)
     this.$watch('width', this.update)
+    //
+    this.onresize = e => {
+      this.updateWidth(e)
+    }
+    hp.onDOM(window, 'resize', this.onresize)
+    //
     this.update()
     this.inited = true
   },
   beforeDestroy() {
-    hp.offDOM(window, 'resize', this.updateWidth)
+    if (this.onresize) {
+      hp.offDOM(window, 'resize', this.onresize)
+    }
   },
 }
 </script>

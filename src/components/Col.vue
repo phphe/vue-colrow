@@ -1,5 +1,5 @@
 <template lang="pug">
-.cr-col(:style="[$parent.colStyle, colStyle]" :data-vm-id="vmId")
+.cr-col(:style="[$parent.colStyle, colStyle]" :data-vm-id="vmId" :isLastCol="isLastCol")
   slot
 </template>
 
@@ -7,15 +7,14 @@
 import * as hp from 'helper-js'
 export default {
   props: {
-    width: {default: 0.1, type: Number},
-    fixed: {default: false}, // fixed width
+    width: {default: 'auto', type: [Number, String]},
     grow: {}, // grow priority, the front is more preferred; 扩展的优先级, 靠前的更优先
     sameWidth: {}, // cols with same value will be set same width
     // responsive
-    xs: {type: Number},
-    sm: {type: Number},
-    md: {type: Number},
-    lg: {type: Number},
+    xs: {type: [Number, String]},
+    sm: {type: [Number, String]},
+    md: {type: [Number, String]},
+    lg: {type: [Number, String]},
   },
   components: {},
   data() {

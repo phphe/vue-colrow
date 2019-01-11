@@ -2,6 +2,12 @@
 #app
   Row
     Col(:width="0.5")
+      Row
+        Col(:width="0.5")
+          .box.red
+        Col(:width="0.5")
+          .box.red
+    Col(:width="0.5")
       .box.red
     Col(:width="0.2" sameWidth)
       .box.red
@@ -12,6 +18,8 @@
       .box.red
     Col(:width="0.2")
       .box.red
+      hr
+      .box.red
     Col(:xs="0.5")
       .box.red
     Col(:width="0.5")
@@ -20,6 +28,19 @@
       .box.red
     Col(:width="0.5")
       .box.yellow
+    Col(:width="0.5")
+      hr
+    Col(width="100px")
+      hr
+    Col(:width="1")
+      .box.red
+    Col
+      .box.yellow
+    Col(grow)
+      .box.red
+    br
+    Col(grow)
+      .box.red
 </template>
 
 <script>

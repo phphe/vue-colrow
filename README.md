@@ -23,6 +23,12 @@ Vue.component('Col', Col)
   <Col :width="300">
     <h2>right sidebar</h2>
   </Col>
+  <Col width="1">
+    <h2>100% width</h2>
+  </Col>
+  <Col width="1px">
+    <h2>right sidebar</h2>
+  </Col>
 </Row>
 ```
 ## break row
@@ -45,15 +51,19 @@ default // only one slot. The slot children can only be Col and br
 ```
 ### Col props
 ```js
-width: {default: 0.1, type: Number}, // when width less than or equal to 1, it will be consider as percentage, or px width
-fixed: {default: false}, // fixed col won't grow to fill rest space
-grow: {}, // grow priority, the left columns have higher priority; 扩展的优先级, 靠前的更优先
-sameWidth: {}, // cols with same value will be set same width
+width: {type: [Number, String]},
+/*
+percentage example: :width="1" :width="0.5" :width="1/3" width="0.5"
+px example: width="100" :width="200" width="300px" width="1px"
+ */
 // same to width. responsive
-xs: {type: Number},
-sm: {type: Number},
-md: {type: Number},
-lg: {type: Number},
+xs: {type: [Number, String]},
+sm: {type: [Number, String]},
+md: {type: [Number, String]},
+lg: {type: [Number, String]},
+grow: {}, // grow priority, the left columns have higher priority; 扩展的优先级, 靠前的更优先
+// if width not set, default value is 1 for a fixed col(no grow), 1px for a grow col
+sameWidth: {}, // cols with same value will be set same width
 ```
 ### Important
 Don't set margin, width, float, absolute or fixed position of a col.
