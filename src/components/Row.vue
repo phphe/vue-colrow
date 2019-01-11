@@ -119,6 +119,7 @@ const update = function() {
   hp.arrayLast(rows).forEach(col => {
     col.isLastRow = true
   })
+  this.$emit('updated', this)
   // recurse children row to updateWidth
   const recurse = (cpt) => {
     for (const child of cpt.$children) {

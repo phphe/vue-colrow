@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.1.0
+ * vue-colrow v1.1.1
  * (c) 2019-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -189,7 +189,8 @@ var update = function update() {
 
   hp.arrayLast(rows).forEach(function (col) {
     col.isLastRow = true;
-  }); // recurse children row to updateWidth
+  });
+  this.$emit('updated', this); // recurse children row to updateWidth
 
   var recurse = function recurse(cpt) {
     var _iteratorNormalCompletion2 = true;

@@ -45,6 +45,10 @@ gutter: {default: 16, type: [Number, Array]} // unit: px. You can specify the co
 ```js
 update() // when window size changed, it will auto update. In other cases, you need to call it manually.
 ```
+### Row events
+```js
+updated(vm)
+```
 ### Row slot
 ```js
 default // only one slot. The slot children can only be Col and br
