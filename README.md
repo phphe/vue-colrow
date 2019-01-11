@@ -51,19 +51,18 @@ default // only one slot. The slot children can only be Col and br
 ```
 ### Col props
 ```js
-width: {type: [Number, String]},
+width: {type: [Number, String, Function]},
 /*
 percentage example: :width="1" :width="0.5" :width="1/3" width="0.5"
 px example: width="100" :width="200" width="300px" width="1px"
+Function example: (rowWidth, restWidth) => 1 / parseInt(rowWidth / 300), // min width 300
  */
 // same to width. responsive
-xs: {type: [Number, String]},
-sm: {type: [Number, String]},
-md: {type: [Number, String]},
-lg: {type: [Number, String]},
-grow: {}, // grow priority, the left columns have higher priority; 扩展的优先级, 靠前的更优先
-// if width not set, default value is 1 for a fixed col(no grow), 1px for a grow col
-sameWidth: {}, // cols with same value will be set same width
+xs: {type: [Number, String, Function]},
+sm: {type: [Number, String, Function]},
+md: {type: [Number, String, Function]},
+lg: {type: [Number, String, Function]},
+grow: {}, // one row has one grow col at most. if width not set, default value is 1 for a fixed col(no grow), 1px for a grow col
 ```
 ### Important
 Don't set margin, width, float, absolute or fixed position of a col.

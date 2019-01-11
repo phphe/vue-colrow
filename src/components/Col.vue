@@ -7,14 +7,13 @@
 import * as hp from 'helper-js'
 export default {
   props: {
-    width: {default: 'auto', type: [Number, String]},
-    grow: {}, // grow priority, the front is more preferred; 扩展的优先级, 靠前的更优先
-    sameWidth: {}, // cols with same value will be set same width
+    width: {default: 'auto'},
+    grow: {},
     // responsive
-    xs: {type: [Number, String]},
-    sm: {type: [Number, String]},
-    md: {type: [Number, String]},
-    lg: {type: [Number, String]},
+    xs: {},
+    sm: {},
+    md: {},
+    lg: {},
   },
   components: {},
   data() {

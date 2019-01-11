@@ -41,6 +41,9 @@
     br
     Col(grow)
       .box.red
+    br
+    Col(v-for="i in 10" :key="i" :width="calcWidth")
+      .box.red
 </template>
 
 <script>
@@ -53,7 +56,9 @@ export default {
   },
   // computed: {},
   // watch: {},
-  // methods: {},
+  methods: {
+    calcWidth: rowWidth => 1 / parseInt(rowWidth / 300),
+  },
   // created() {},
   // mounted() {},
 }
