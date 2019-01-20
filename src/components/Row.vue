@@ -139,10 +139,12 @@ const update = function() {
   })
 }
 
+const DEFAULT_GUTTER = 16
+
 export default {
   isColRow_row: true,
   props: {
-    gutter: {default: 16, type: [Number, Array]},
+    gutter: {default: DEFAULT_GUTTER, type: [Number, Array]},
   },
   // components: {},
   data() {
@@ -171,6 +173,12 @@ export default {
     updateGutter() {
       const {gutter} = this
       let t = hp.isArray(gutter) ? gutter : [gutter, gutter]
+      if (t[0] == null) {
+        t[0] = DEFAULT_GUTTER
+      }
+      if (t[1] == null) {
+        t[1] = DEFAULT_GUTTER
+      }
       this.gutterX = t[0]
       this.gutterY = t[1]
     },
