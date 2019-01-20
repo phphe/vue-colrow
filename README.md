@@ -66,7 +66,10 @@ xs: {type: [Number, String, Function]},
 sm: {type: [Number, String, Function]},
 md: {type: [Number, String, Function]},
 lg: {type: [Number, String, Function]},
-grow: {}, // one row has one grow col at most. if width not set, default value is 1 for a fixed col(no grow), 1px for a grow col
+// one row has one grow col at most. if width not set, default value is 1 for a fixed col(no grow), 1px for a grow col
+// if there already is a grow col in row, it will auto break before next grow col.
+// you may need use `br` to break row.
+grow: {},
 ```
 ### Important
 Don't set margin, width, float, absolute or fixed position of a col.
