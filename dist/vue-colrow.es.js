@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.1.1
+ * vue-colrow v1.1.2
  * (c) 2019-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -9,7 +9,7 @@ import getIterator from 'core-js/library/fn/get-iterator';
 import 'core-js/modules/es6.number.constructor';
 import 'core-js/modules/es6.string.ends-with';
 import 'core-js/modules/web.dom.iterable';
-import { hasClass, isString, arrayLast, debounce, isArray, isFunction, onDOM, offDOM } from 'helper-js';
+import { hasClass, isString, arrayLast, isArray, isFunction, debounce, onDOM, offDOM } from 'helper-js';
 import { isPropTrue } from 'vue-functions';
 
 var _parseInt$1 = _parseInt;
@@ -51,7 +51,12 @@ var update = function update() {
       }
 
       if (hasClass(el, 'clearfix')) {
+        // don't add .clearfix as row child
         return "continue";
+      }
+
+      if (!hasClass(el, 'cr-col')) {
+        console.error("Only Col, br can be child of Row. Wrong element:", el);
       }
 
       var id = el.getAttribute('data-vm-id');
@@ -222,7 +227,6 @@ var update = function update() {
   });
 };
 
-var updateDebounced = debounce(update);
 var script = {
   isColRow_row: true,
   props: {
@@ -296,7 +300,7 @@ var script = {
     },
     // find last col, row
     update: update,
-    updateDebounced: updateDebounced,
+    // updateDebounced,
     registerCol: function registerCol(colVm) {
       this.colsMapping[colVm._uid] = colVm;
       this.updateDebounced();
@@ -306,7 +310,9 @@ var script = {
       this.updateDebounced();
     }
   },
-  // created() {},
+  created: function created() {
+    this.updateDebounced = debounce(update);
+  },
   mounted: function mounted() {
     var _this2 = this;
 

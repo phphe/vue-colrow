@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.1.1
+ * vue-colrow v1.1.2
  * (c) 2019-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -1956,7 +1956,12 @@
 	      }
 
 	      if (hasClass(el, 'clearfix')) {
+	        // don't add .clearfix as row child
 	        return "continue";
+	      }
+
+	      if (!hasClass(el, 'cr-col')) {
+	        console.error("Only Col, br can be child of Row. Wrong element:", el);
 	      }
 
 	      var id = el.getAttribute('data-vm-id');
@@ -2127,7 +2132,6 @@
 	  });
 	};
 
-	var updateDebounced = debounce(update);
 	var script = {
 	  isColRow_row: true,
 	  props: {
@@ -2201,7 +2205,7 @@
 	    },
 	    // find last col, row
 	    update: update,
-	    updateDebounced: updateDebounced,
+	    // updateDebounced,
 	    registerCol: function registerCol(colVm) {
 	      this.colsMapping[colVm._uid] = colVm;
 	      this.updateDebounced();
@@ -2211,7 +2215,9 @@
 	      this.updateDebounced();
 	    }
 	  },
-	  // created() {},
+	  created: function created() {
+	    this.updateDebounced = debounce(update);
+	  },
 	  mounted: function mounted() {
 	    var _this2 = this;
 
