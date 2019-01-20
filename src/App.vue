@@ -44,6 +44,20 @@
     br
     Col(v-for="i in 10" :key="i" :width="calcWidth")
       .box.red
+    br
+    Col(:width="0.5")
+      div
+        Row
+          Col(:width="0.5")
+            Row
+              Col(:width="0.5")
+                .box.yellow
+              Col(:width="0.5")
+                .box.yellow
+          Col(:width="0.5")
+            .box.yellow
+    Col(:width="0.5")
+      .box.red
 </template>
 
 <script>

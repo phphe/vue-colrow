@@ -29,7 +29,11 @@ const update = function() {
       continue
     }
     if (hp.hasClass(el, 'clearfix')) {
+      // don't add .clearfix as row child
       continue
+    }
+    if (!hp.hasClass(el, 'cr-col')) {
+      console.error(`Only Col, br can be child of Row. Wrong element:`, el)
     }
     const id = el.getAttribute('data-vm-id')
     const col = this.colsMapping[id]
@@ -134,7 +138,6 @@ const update = function() {
     recurse(this)
   })
 }
-const updateDebounced = hp.debounce(update)
 
 export default {
   isColRow_row: true,
@@ -203,7 +206,7 @@ export default {
     },
     // find last col, row
     update,
-    updateDebounced,
+    // updateDebounced,
     registerCol(colVm) {
       this.colsMapping[colVm._uid] = colVm
       this.updateDebounced()
@@ -213,7 +216,9 @@ export default {
       this.updateDebounced()
     },
   },
-  // created() {},
+  created() {
+    this.updateDebounced = hp.debounce(update)
+  },
   mounted() {
     this.mounted = true
     this.updateWidth()
