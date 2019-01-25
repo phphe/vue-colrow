@@ -10,10 +10,8 @@ import * as hp from 'helper-js'
 import * as vf from 'vue-functions'
 
 // find last col, row
-const update = function() {
-  if (!this.mounted) {
-    return
-  }
+const update = async function() {
+  await this.mountedPromise
   const rowWidth = this.width + this.gutterX
   const rows = []
   let currentRow
@@ -25,6 +23,7 @@ const update = function() {
   let growExisted // row只允许一个grow col
   for (const el of this.$refs.inner.children) {
     if (el.tagName === 'BR') {
+      // new row
       currentRow = null
       continue
     }
@@ -42,14 +41,16 @@ const update = function() {
     col.isLastRow = false
     if (vf.isPropTrue(col.grow)) {
       if (growExisted) {
+        // new row
         currentRow = null
-        growExisted = false
       } else {
         growExisted = true
       }
     }
     //
     if (!currentRow) {
+      // new row
+      growExisted = false
       currentRow = []
       rows.push(currentRow)
       raw = 0
@@ -83,6 +84,8 @@ const update = function() {
     col._realWidth = cw
     raw += cw
     if (raw > rowWidth) {
+      // new row
+      growExisted = false
       currentRow = [col]
       rows.push(currentRow)
       raw = cw
@@ -149,7 +152,9 @@ export default {
   // components: {},
   data() {
     return {
-      mounted: false,
+      mountedPromise: new Promise((resolve, reject) => {
+        this._mountedResolve = resolve
+      }),
       width: null,
       gutterX: null,
       gutterY: null,
@@ -228,7 +233,7 @@ export default {
     this.updateDebounced = hp.debounce(update)
   },
   mounted() {
-    this.mounted = true
+    this._mountedResolve()
     this.updateWidth()
     this.$watch('gutter', this.updateGutter, {deep: true, immediate: true})
     this.$watch('gutterX', this.updateDebounced)

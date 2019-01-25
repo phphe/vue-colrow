@@ -9,12 +9,12 @@
           .box.red
     Col(:width="0.5")
       .box.red
-    Col(:width="0.2" sameWidth)
+    Col(:width="0.2")
       .box.red
-    Col(sameWidth)
+    Col(:width="0.2")
       .box.red
     br
-    Col(sameWidth)
+    Col(:width="0.2")
       .box.red
     Col(:width="0.2")
       .box.red
@@ -58,6 +58,18 @@
             .box.yellow
     Col(:width="0.5")
       .box.red
+    Col(:width="50")
+      .box.red
+    Col(grow)
+      .box.red
+    br
+    Col(:width="50")
+      .box.red
+    Col(:width="200")
+      .box.red
+    Col(grow)
+      .box.red
+    br
 </template>
 
 <script>

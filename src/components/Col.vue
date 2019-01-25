@@ -44,10 +44,10 @@ export default {
   },
   // watch: {},
   // methods: {},
-  // created() {},
-  mounted() {
+  created() {
     this.$parent.registerCol(this)
   },
+  // mounted() {},
   beforeDestroy() {
     this.$parent.unregisterCol(this)
   },
