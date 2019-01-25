@@ -1,16 +1,20 @@
 /*!
- * vue-colrow v1.1.3
+ * vue-colrow v1.1.4
  * (c) 2019-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
+import promise from 'core-js/library/fn/promise';
 import _parseInt from 'core-js/library/fn/parse-int';
 import _parseFloat from 'core-js/library/fn/parse-float';
 import getIterator from 'core-js/library/fn/get-iterator';
 import 'core-js/modules/es6.number.constructor';
 import 'core-js/modules/es6.string.ends-with';
 import 'core-js/modules/web.dom.iterable';
+import 'regenerator-runtime/runtime';
 import { hasClass, isString, arrayLast, isArray, isFunction, debounce, onDOM, offDOM } from 'helper-js';
 import { isPropTrue } from 'vue-functions';
+
+var promise$1 = promise;
 
 var _parseInt$1 = _parseInt;
 
@@ -18,214 +22,319 @@ var _parseFloat$1 = _parseFloat;
 
 var getIterator$1 = getIterator;
 
-var update = function update() {
-  var _this = this;
-
-  if (!this.mounted) {
-    return;
-  }
-
-  var rowWidth = this.width + this.gutterX;
-  var rows = [];
-  var currentRow;
-  var raw; // row accumulate width; row累加宽度
-
-  if (!this.$refs.inner) {
-    // prevent error when hot reload npm run dev
-    return;
-  }
-
-  var growExisted; // row只允许一个grow col
-
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
-    var _loop = function _loop() {
-      var el = _step.value;
-
-      if (el.tagName === 'BR') {
-        currentRow = null;
-        return "continue";
-      }
-
-      if (hasClass(el, 'clearfix')) {
-        // don't add .clearfix as row child
-        return "continue";
-      }
-
-      if (!hasClass(el, 'cr-col')) {
-        console.error("Only Col, br can be child of Row. Wrong element:", el);
-      }
-
-      var id = el.getAttribute('data-vm-id');
-      var col = _this.colsMapping[id];
-      col.isFirstCol = false;
-      col.isLastCol = false;
-      col.isLastRow = false;
-
-      if (isPropTrue(col.grow)) {
-        if (growExisted) {
-          currentRow = null;
-          growExisted = false;
-        } else {
-          growExisted = true;
-        }
-      } //
-
-
-      if (!currentRow) {
-        currentRow = [];
-        rows.push(currentRow);
-        raw = 0;
-      } //
-
-
-      var cw = void 0; // col width. _realWidth. contain margin
-
-      var setCw = function setCw(col, w) {
-        var isPx;
-
-        if (isString(w)) {
-          if (w.endsWith('px')) {
-            isPx = true;
-          }
-
-          w = _parseFloat$1(w);
-        }
-
-        if (!isPx && w <= 1) {
-          // width is proportion; 小于等于1的是比例
-          cw = _parseInt$1(rowWidth * w);
-          cw = cw > rowWidth ? rowWidth : cw; // col max width is 100%
-
-          col.cssWidth = cw - _this.gutterX;
-        } else {
-          // width is px; 指定像素
-          cw = w + _this.gutterX;
-          cw = cw > rowWidth ? rowWidth : cw; // col max width is 100%
-
-          col.cssWidth = w;
-        }
-      };
-
-      var restW = rowWidth - raw;
-
-      var cpw = _this.getColCurrentPropWidth(col, rowWidth, restW); // col prop width for current screen size
-
-
-      setCw(col, cpw); //
-
-      col._realWidth = cw;
-      raw += cw;
-
-      if (raw > rowWidth) {
-        currentRow = [col];
-        rows.push(currentRow);
-        raw = cw;
-      } else {
-        currentRow.push(col);
-      }
-    };
-
-    for (var _iterator = getIterator$1(this.$refs.inner.children), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var _ret = _loop();
-
-      if (_ret === "continue") continue;
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  if (rows.length === 0) {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
     return;
-  } // when screen narrower than first col, first row is empty, so remove it
-
-
-  if (rows[0].length === 0) {
-    rows.shift();
-  } // grow col
-
-
-  for (var _i = 0; _i < rows.length; _i++) {
-    var row = rows[_i];
-    row[0].isFirstCol = true;
-    arrayLast(row).isLastCol = true; // sort
-
-    var restW = rowWidth; // rest width; 递减后剩余宽度
-
-    var growCol = void 0;
-    row.forEach(function (col, i) {
-      if (isPropTrue(col.grow)) {
-        growCol = col;
-      }
-
-      restW -= col._realWidth;
-    });
-
-    if (growCol) {
-      growCol.cssWidth += restW;
-      growCol._realWidth += restW;
-    } else if (restW <= 3) {
-      // 当剩下3px以内的剩余时, 加到最后一列上
-      var lastCol = arrayLast(row);
-      lastCol.cssWidth += restW;
-      lastCol._realWidth += restW;
-    }
   }
 
-  arrayLast(rows).forEach(function (col) {
-    col.isLastRow = true;
-  });
-  this.$emit('updated', this); // recurse children row to updateWidth
+  if (info.done) {
+    resolve(value);
+  } else {
+    promise$1.resolve(value).then(_next, _throw);
+  }
+}
 
-  var recurse = function recurse(cpt) {
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new promise$1(function (resolve, reject) {
+      var gen = fn.apply(self, args);
 
-    try {
-      for (var _iterator2 = getIterator$1(cpt.$children), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-        var child = _step2.value;
-
-        if (child.$options.isColRow_row) {
-          child.updateWidth();
-        } else {
-          recurse(child);
-        }
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
       }
-    } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-          _iterator2.return();
-        }
-      } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
-        }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
       }
-    }
+
+      _next(undefined);
+    });
   };
+}
 
-  this.$nextTick(function () {
-    recurse(_this);
-  });
-};
+var update =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee() {
+    var _this = this;
+
+    var rowWidth, rows, currentRow, raw, growExisted, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, _i, row, restW, growCol, lastCol, recurse;
+
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return this.mountedPromise;
+
+          case 2:
+            rowWidth = this.width + this.gutterX;
+            rows = [];
+
+            if (this.$refs.inner) {
+              _context.next = 6;
+              break;
+            }
+
+            return _context.abrupt("return");
+
+          case 6:
+            // row只允许一个grow col
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            _context.prev = 9;
+
+            _loop = function _loop() {
+              var el = _step.value;
+
+              if (el.tagName === 'BR') {
+                // new row
+                currentRow = null;
+                return "continue";
+              }
+
+              if (hasClass(el, 'clearfix')) {
+                // don't add .clearfix as row child
+                return "continue";
+              }
+
+              if (!hasClass(el, 'cr-col')) {
+                console.error("Only Col, br can be child of Row. Wrong element:", el);
+              }
+
+              var id = el.getAttribute('data-vm-id');
+              var col = _this.colsMapping[id];
+              col.isFirstCol = false;
+              col.isLastCol = false;
+              col.isLastRow = false;
+
+              if (isPropTrue(col.grow)) {
+                if (growExisted) {
+                  // new row
+                  currentRow = null;
+                } else {
+                  growExisted = true;
+                }
+              } //
+
+
+              if (!currentRow) {
+                // new row
+                growExisted = false;
+                currentRow = [];
+                rows.push(currentRow);
+                raw = 0;
+              } //
+
+
+              var cw = void 0; // col width. _realWidth. contain margin
+
+              var setCw = function setCw(col, w) {
+                var isPx;
+
+                if (isString(w)) {
+                  if (w.endsWith('px')) {
+                    isPx = true;
+                  }
+
+                  w = _parseFloat$1(w);
+                }
+
+                if (!isPx && w <= 1) {
+                  // width is proportion; 小于等于1的是比例
+                  cw = _parseInt$1(rowWidth * w);
+                  cw = cw > rowWidth ? rowWidth : cw; // col max width is 100%
+
+                  col.cssWidth = cw - _this.gutterX;
+                } else {
+                  // width is px; 指定像素
+                  cw = w + _this.gutterX;
+                  cw = cw > rowWidth ? rowWidth : cw; // col max width is 100%
+
+                  col.cssWidth = w;
+                }
+              };
+
+              var restW = rowWidth - raw;
+
+              var cpw = _this.getColCurrentPropWidth(col, rowWidth, restW); // col prop width for current screen size
+
+
+              setCw(col, cpw); //
+
+              col._realWidth = cw;
+              raw += cw;
+
+              if (raw > rowWidth) {
+                // new row
+                growExisted = false;
+                currentRow = [col];
+                rows.push(currentRow);
+                raw = cw;
+              } else {
+                currentRow.push(col);
+              }
+            };
+
+            _iterator = getIterator$1(this.$refs.inner.children);
+
+          case 12:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              _context.next = 19;
+              break;
+            }
+
+            _ret = _loop();
+
+            if (!(_ret === "continue")) {
+              _context.next = 16;
+              break;
+            }
+
+            return _context.abrupt("continue", 16);
+
+          case 16:
+            _iteratorNormalCompletion = true;
+            _context.next = 12;
+            break;
+
+          case 19:
+            _context.next = 25;
+            break;
+
+          case 21:
+            _context.prev = 21;
+            _context.t0 = _context["catch"](9);
+            _didIteratorError = true;
+            _iteratorError = _context.t0;
+
+          case 25:
+            _context.prev = 25;
+            _context.prev = 26;
+
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+
+          case 28:
+            _context.prev = 28;
+
+            if (!_didIteratorError) {
+              _context.next = 31;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 31:
+            return _context.finish(28);
+
+          case 32:
+            return _context.finish(25);
+
+          case 33:
+            if (!(rows.length === 0)) {
+              _context.next = 35;
+              break;
+            }
+
+            return _context.abrupt("return");
+
+          case 35:
+            // when screen narrower than first col, first row is empty, so remove it
+            if (rows[0].length === 0) {
+              rows.shift();
+            } // grow col
+
+
+            for (_i = 0; _i < rows.length; _i++) {
+              row = rows[_i];
+              row[0].isFirstCol = true;
+              arrayLast(row).isLastCol = true; // sort
+
+              restW = rowWidth; // rest width; 递减后剩余宽度
+
+              growCol = void 0;
+              row.forEach(function (col, i) {
+                if (isPropTrue(col.grow)) {
+                  growCol = col;
+                }
+
+                restW -= col._realWidth;
+              });
+
+              if (growCol) {
+                growCol.cssWidth += restW;
+                growCol._realWidth += restW;
+              } else if (restW <= 3) {
+                // 当剩下3px以内的剩余时, 加到最后一列上
+                lastCol = arrayLast(row);
+                lastCol.cssWidth += restW;
+                lastCol._realWidth += restW;
+              }
+            }
+
+            arrayLast(rows).forEach(function (col) {
+              col.isLastRow = true;
+            });
+            this.$emit('updated', this); // recurse children row to updateWidth
+
+            recurse = function recurse(cpt) {
+              var _iteratorNormalCompletion2 = true;
+              var _didIteratorError2 = false;
+              var _iteratorError2 = undefined;
+
+              try {
+                for (var _iterator2 = getIterator$1(cpt.$children), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                  var child = _step2.value;
+
+                  if (child.$options.isColRow_row) {
+                    child.updateWidth();
+                  } else {
+                    recurse(child);
+                  }
+                }
+              } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                    _iterator2.return();
+                  }
+                } finally {
+                  if (_didIteratorError2) {
+                    throw _iteratorError2;
+                  }
+                }
+              }
+            };
+
+            this.$nextTick(function () {
+              recurse(_this);
+            });
+
+          case 41:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, this, [[9, 21, 25, 33], [26,, 28, 32]]);
+  }));
+
+  return function update() {
+    return _ref.apply(this, arguments);
+  };
+}();
 
 var DEFAULT_GUTTER = 16;
 var script = {
@@ -238,8 +347,12 @@ var script = {
   },
   // components: {},
   data: function data() {
+    var _this2 = this;
+
     return {
-      mounted: false,
+      mountedPromise: new promise$1(function (resolve, reject) {
+        _this2._mountedResolve = resolve;
+      }),
       width: null,
       gutterX: null,
       gutterY: null,
@@ -324,9 +437,10 @@ var script = {
     this.updateDebounced = debounce(update);
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this3 = this;
 
-    this.mounted = true;
+    this._mountedResolve();
+
     this.updateWidth();
     this.$watch('gutter', this.updateGutter, {
       deep: true,
@@ -337,7 +451,7 @@ var script = {
     this.$watch('width', this.updateDebounced); //
 
     this.onresize = function (e) {
-      _this2.updateWidth(e);
+      _this3.updateWidth(e);
     };
 
     onDOM(window, 'resize', this.onresize); //
@@ -346,10 +460,10 @@ var script = {
     //  可能因为滚动条后出现而得到错误的宽度
 
     setTimeout(function () {
-      _this2.updateWidth();
+      _this3.updateWidth();
 
       setTimeout(function () {
-        _this2.inited = true;
+        _this3.inited = true;
       }, 16);
     }, 0);
   },
@@ -476,10 +590,10 @@ var script$1 = {
   },
   // watch: {},
   // methods: {},
-  // created() {},
-  mounted: function mounted() {
+  created: function created() {
     this.$parent.registerCol(this);
   },
+  // mounted() {},
   beforeDestroy: function beforeDestroy() {
     this.$parent.unregisterCol(this);
   }
