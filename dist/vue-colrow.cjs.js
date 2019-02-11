@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.1.4
+ * vue-colrow v1.1.5
  * (c) 2019-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -72,7 +72,7 @@ function () {
   regeneratorRuntime.mark(function _callee() {
     var _this = this;
 
-    var rowWidth, rows, currentRow, raw, growExisted, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, _i, row, restW, growCol, lastCol, recurse;
+    var rowWidth, rows, currentRow, raw, growExisted, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, _i, row, restW, growCol, lastCol, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, child;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -82,22 +82,23 @@ function () {
             return this.mountedPromise;
 
           case 2:
+            this.updateWidth();
             rowWidth = this.width + this.gutterX;
             rows = [];
 
             if (this.$refs.inner) {
-              _context.next = 6;
+              _context.next = 7;
               break;
             }
 
             return _context.abrupt("return");
 
-          case 6:
+          case 7:
             // row只允许一个grow col
             _iteratorNormalCompletion = true;
             _didIteratorError = false;
             _iteratorError = undefined;
-            _context.prev = 9;
+            _context.prev = 10;
 
             _loop = function _loop() {
               var el = _step.value;
@@ -193,69 +194,69 @@ function () {
 
             _iterator = getIterator$1(this.$refs.inner.children);
 
-          case 12:
+          case 13:
             if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              _context.next = 19;
+              _context.next = 20;
               break;
             }
 
             _ret = _loop();
 
             if (!(_ret === "continue")) {
-              _context.next = 16;
+              _context.next = 17;
               break;
             }
 
-            return _context.abrupt("continue", 16);
+            return _context.abrupt("continue", 17);
 
-          case 16:
+          case 17:
             _iteratorNormalCompletion = true;
-            _context.next = 12;
+            _context.next = 13;
             break;
 
-          case 19:
-            _context.next = 25;
+          case 20:
+            _context.next = 26;
             break;
 
-          case 21:
-            _context.prev = 21;
-            _context.t0 = _context["catch"](9);
+          case 22:
+            _context.prev = 22;
+            _context.t0 = _context["catch"](10);
             _didIteratorError = true;
             _iteratorError = _context.t0;
 
-          case 25:
-            _context.prev = 25;
+          case 26:
             _context.prev = 26;
+            _context.prev = 27;
 
             if (!_iteratorNormalCompletion && _iterator.return != null) {
               _iterator.return();
             }
 
-          case 28:
-            _context.prev = 28;
+          case 29:
+            _context.prev = 29;
 
             if (!_didIteratorError) {
-              _context.next = 31;
+              _context.next = 32;
               break;
             }
 
             throw _iteratorError;
 
-          case 31:
-            return _context.finish(28);
-
           case 32:
-            return _context.finish(25);
+            return _context.finish(29);
 
           case 33:
+            return _context.finish(26);
+
+          case 34:
             if (!(rows.length === 0)) {
-              _context.next = 35;
+              _context.next = 36;
               break;
             }
 
             return _context.abrupt("return");
 
-          case 35:
+          case 36:
             // when screen narrower than first col, first row is empty, so remove it
             if (rows[0].length === 0) {
               rows.shift();
@@ -292,49 +293,57 @@ function () {
             hp.arrayLast(rows).forEach(function (col) {
               col.isLastRow = true;
             });
-            this.$emit('updated', this); // recurse children row to updateWidth
+            this.$emit('updated', this); // update children row
 
-            recurse = function recurse(cpt) {
-              var _iteratorNormalCompletion2 = true;
-              var _didIteratorError2 = false;
-              var _iteratorError2 = undefined;
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            _context.prev = 43;
 
-              try {
-                for (var _iterator2 = getIterator$1(cpt.$children), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                  var child = _step2.value;
+            for (_iterator2 = getIterator$1(this.childrenRows); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              child = _step2.value;
+              child.update();
+            }
 
-                  if (child.$options.isColRow_row) {
-                    child.updateWidth();
-                  } else {
-                    recurse(child);
-                  }
-                }
-              } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                    _iterator2.return();
-                  }
-                } finally {
-                  if (_didIteratorError2) {
-                    throw _iteratorError2;
-                  }
-                }
-              }
-            };
+            _context.next = 51;
+            break;
 
-            this.$nextTick(function () {
-              recurse(_this);
-            });
+          case 47:
+            _context.prev = 47;
+            _context.t1 = _context["catch"](43);
+            _didIteratorError2 = true;
+            _iteratorError2 = _context.t1;
 
-          case 41:
+          case 51:
+            _context.prev = 51;
+            _context.prev = 52;
+
+            if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+              _iterator2.return();
+            }
+
+          case 54:
+            _context.prev = 54;
+
+            if (!_didIteratorError2) {
+              _context.next = 57;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 57:
+            return _context.finish(54);
+
+          case 58:
+            return _context.finish(51);
+
+          case 59:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, this, [[9, 21, 25, 33], [26,, 28, 32]]);
+    }, _callee, this, [[10, 22, 26, 34], [27,, 29, 33], [43, 47, 51, 59], [52,, 54, 58]]);
   }));
 
   return function update() {
@@ -363,7 +372,10 @@ var script = {
       gutterX: null,
       gutterY: null,
       colsMapping: {},
-      inited: false
+      inited: false,
+      // structure
+      parentRow: null,
+      childrenRows: []
     };
   },
   computed: {
@@ -437,43 +449,57 @@ var script = {
     unregisterCol: function unregisterCol(colVm) {
       delete this.colsMapping[colVm._uid];
       this.updateDebounced();
+    },
+    findParentRow: function findParentRow() {
+      var parentRow = this;
+
+      while (true) {
+        parentRow = parentRow.$parent;
+
+        if (!parentRow || parentRow.$options.isColRow_row) {
+          break;
+        }
+      }
+
+      if (parentRow) {
+        this.parentRow = parentRow;
+        this.parentRow.childrenRows.push(this);
+      }
     }
   },
   created: function created() {
     this.updateDebounced = hp.debounce(update);
+    this.findParentRow();
   },
   mounted: function mounted() {
     var _this3 = this;
 
     this._mountedResolve();
 
-    this.updateWidth();
     this.$watch('gutter', this.updateGutter, {
       deep: true,
       immediate: true
     });
     this.$watch('gutterX', this.updateDebounced);
-    this.$watch('gutterY', this.updateDebounced);
-    this.$watch('width', this.updateDebounced); //
+    this.$watch('gutterY', this.updateDebounced); //
 
     this.onresize = function (e) {
-      _this3.updateWidth(e);
+      if (!_this3.parentRow) {
+        _this3.update();
+      }
     };
 
     hp.onDOM(window, 'resize', this.onresize); //
 
-    this.update(); //  may get wrong width because of scroll bar
-    //  可能因为滚动条后出现而得到错误的宽度
-
-    setTimeout(function () {
-      _this3.updateWidth();
-
-      setTimeout(function () {
-        _this3.inited = true;
-      }, 16);
-    }, 0);
+    if (!this.parentRow) {
+      this.update();
+    }
   },
   beforeDestroy: function beforeDestroy() {
+    if (this.parentRow) {
+      hp.arrayRemove(this, this.parentRow.childrenRows);
+    }
+
     if (this.onresize) {
       hp.offDOM(window, 'resize', this.onresize);
     }
@@ -499,7 +525,7 @@ function getPrioritized() {
 /* script */
             const __vue_script__ = script;
 /* template */
-var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"cr-row",class:{'cr-row-uninited': !_vm.inited}},[_c('div',{ref:"inner",staticClass:"cr-row-inner"},[_vm._t("default"),_c('div',{staticClass:"clearfix"})],2)])};
+var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"cr-row"},[_c('div',{ref:"inner",staticClass:"cr-row-inner"},[_vm._t("default"),_c('div',{staticClass:"clearfix"})],2)])};
 var __vue_staticRenderFns__ = [];
 
   /* style */
