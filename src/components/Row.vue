@@ -1,5 +1,5 @@
 <template lang="pug">
-.cr-row(:class="{'cr-row-uninited': !inited}")
+.cr-row
   .cr-row-inner(ref="inner")
     slot
     .clearfix
@@ -12,6 +12,7 @@ import * as vf from 'vue-functions'
 // find last col, row
 const update = async function() {
   await this.mountedPromise
+  this.updateWidth()
   const rowWidth = this.width + this.gutterX
   const rows = []
   let currentRow
@@ -127,19 +128,10 @@ const update = async function() {
     col.isLastRow = true
   })
   this.$emit('updated', this)
-  // recurse children row to updateWidth
-  const recurse = (cpt) => {
-    for (const child of cpt.$children) {
-      if (child.$options.isColRow_row) {
-        child.updateWidth()
-      } else {
-        recurse(child)
-      }
-    }
+  // update children row
+  for (const child of this.childrenRows) {
+    child.update()
   }
-  this.$nextTick(() => {
-    recurse(this)
-  })
 }
 
 const DEFAULT_GUTTER = 16
@@ -160,6 +152,9 @@ export default {
       gutterY: null,
       colsMapping: {},
       inited: false,
+      // structure
+      parentRow: null,
+      childrenRows: [],
     }
   },
   computed: {
@@ -228,34 +223,45 @@ export default {
       delete this.colsMapping[colVm._uid]
       this.updateDebounced()
     },
+    findParentRow() {
+      let parentRow = this
+      while (true) {
+        parentRow = parentRow.$parent
+        if (!parentRow || parentRow.$options.isColRow_row) {
+          break
+        }
+      }
+      if (parentRow) {
+        this.parentRow = parentRow
+        this.parentRow.childrenRows.push(this)
+      }
+    },
   },
   created() {
     this.updateDebounced = hp.debounce(update)
+    this.findParentRow()
   },
   mounted() {
     this._mountedResolve()
-    this.updateWidth()
     this.$watch('gutter', this.updateGutter, {deep: true, immediate: true})
     this.$watch('gutterX', this.updateDebounced)
     this.$watch('gutterY', this.updateDebounced)
-    this.$watch('width', this.updateDebounced)
     //
     this.onresize = e => {
-      this.updateWidth(e)
+      if (!this.parentRow) {
+        this.update()
+      }
     }
     hp.onDOM(window, 'resize', this.onresize)
     //
-    this.update()
-    //  may get wrong width because of scroll bar
-    //  可能因为滚动条后出现而得到错误的宽度
-    setTimeout(() => {
-      this.updateWidth()
-      setTimeout(() => {
-        this.inited = true
-      }, 16)
-    }, 0)
+    if (!this.parentRow) {
+      this.update()
+    }
   },
   beforeDestroy() {
+    if (this.parentRow) {
+      hp.arrayRemove(this, this.parentRow.childrenRows)
+    }
     if (this.onresize) {
       hp.offDOM(window, 'resize', this.onresize)
     }
@@ -274,9 +280,6 @@ function getPrioritized(...arr) {
 
 <style>
 .cr-row{
-}
-.cr-row-uninited{
-  visibility: hidden;
 }
 .cr-row-inner > br{
   display: none;
