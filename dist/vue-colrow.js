@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.1.5
+ * vue-colrow v1.1.6
  * (c) 2019-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -2843,7 +2843,7 @@
   }
 
   /*!
-   * helper-js v1.2.2
+   * helper-js v1.3.1
    * (c) 2018-present phphe <phphe@outlook.com> (https://github.com/phphe)
    * Released under the MIT License.
    */
@@ -3296,13 +3296,13 @@
   }(EventProcessor);
 
   /*!
-   * vue-functions v0.0.4
-   * (c) 2018-present phphe <phphe@outlook.com> (https://github.com/phphe)
+   * vue-functions v1.0.1
+   * (c) 2019-present phphe <phphe@outlook.com> (https://github.com/phphe)
    * Released under the MIT License.
    */
   function isPropTrue(value) {
     return value === '' || value;
-  }
+  } // the dependences in getter can't be auto resolved. must use exec to include dependences
 
   var update =
   /*#__PURE__*/

@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.1.5
+ * vue-colrow v1.1.6
  * (c) 2019-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
