@@ -13,7 +13,9 @@
       .box.red
     Col(:width="0.2")
       .box.red
-    br
+    BreakRow
+    Col
+      h2 2
     Col(:width="0.2")
       .box.red
     Col(:width="0.2")
@@ -38,14 +40,14 @@
       .box.yellow
     Col(grow)
       .box.red
-    br
+    BreakRow
     Col(grow)
       .box.red
-    br
-    Col(v-for="i in 10" :key="i" :width="calcWidth")
+    Col
+      hr
+    Col.xxx(v-for="i in 10" :key="i" width="300" grow)
       .box.red
-    br
-    Col(:width="0.5")
+    Col(:width="0.6")
       div
         Row
           Col(:width="0.5")
@@ -62,21 +64,22 @@
       .box.red
     Col(grow)
       .box.red
-    br
+    BreakRow
     Col(:width="50")
       .box.red
     Col(:width="200")
       .box.red
     Col(grow)
       .box.red
-    br
+    BreakRow
 </template>
 
 <script>
 import Row from './components/Row.vue'
 import Col from './components/Col.vue'
+import BreakRow from './components/BreakRow.vue'
 export default {
-  components: {Row, Col},
+  components: {Row, Col, BreakRow},
   data() {
     return {}
   },

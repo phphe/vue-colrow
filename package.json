@@ -1,6 +1,6 @@
 {
   "name": "vue-colrow",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "description": "Components Col and Row are dedicated to layout normal and responsive web page easily.",
   "main": "dist/vue-colrow.cjs.js",
   "module": "dist/vue-colrow.es.js",
