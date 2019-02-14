@@ -3489,14 +3489,11 @@
               return _context.finish(26);
 
             case 34:
-              if (!(rows.length === 0)) {
-                _context.next = 36;
+              if (!(rows.length !== 0)) {
+                _context.next = 58;
                 break;
               }
 
-              return _context.abrupt("return");
-
-            case 36:
               // when screen narrower than first col, first row is empty, so remove it
               if (rows[0].length === 0) {
                 rows.shift();
@@ -3538,52 +3535,57 @@
               _iteratorNormalCompletion2 = true;
               _didIteratorError2 = false;
               _iteratorError2 = undefined;
-              _context.prev = 43;
+              _context.prev = 42;
 
               for (_iterator2 = getIterator$1(this.childrenRows); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                 child = _step2.value;
                 child.update();
               }
 
-              _context.next = 51;
+              _context.next = 50;
               break;
 
-            case 47:
-              _context.prev = 47;
-              _context.t1 = _context["catch"](43);
+            case 46:
+              _context.prev = 46;
+              _context.t1 = _context["catch"](42);
               _didIteratorError2 = true;
               _iteratorError2 = _context.t1;
 
-            case 51:
+            case 50:
+              _context.prev = 50;
               _context.prev = 51;
-              _context.prev = 52;
 
               if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
                 _iterator2.return();
               }
 
-            case 54:
-              _context.prev = 54;
+            case 53:
+              _context.prev = 53;
 
               if (!_didIteratorError2) {
-                _context.next = 57;
+                _context.next = 56;
                 break;
               }
 
               throw _iteratorError2;
 
+            case 56:
+              return _context.finish(53);
+
             case 57:
-              return _context.finish(54);
+              return _context.finish(50);
 
             case 58:
-              return _context.finish(51);
+              this.$nextTick(function () {
+                _this.inited = true;
+              });
 
             case 59:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[10, 22, 26, 34], [27,, 29, 33], [43, 47, 51, 59], [52,, 54, 58]]);
+      }, _callee, this, [[10, 22, 26, 34], [27,, 29, 33], [42, 46, 50, 58], [51,, 53, 57]]);
     }));
 
     return function update() {
@@ -3737,7 +3739,7 @@
     },
     beforeDestroy: function beforeDestroy() {
       if (this.parentRow) {
-        arrayRemove(this, this.parentRow.childrenRows);
+        arrayRemove(this.parentRow.childrenRows, this);
       }
 
       if (this.onresize) {
@@ -3765,7 +3767,7 @@
   /* script */
               const __vue_script__ = script;
   /* template */
-  var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"cr-row"},[_c('div',{ref:"inner",staticClass:"cr-row-inner"},[_vm._t("default"),_c('div',{staticClass:"clearfix"})],2)])};
+  var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"cr-row",class:{'cr-row-cloak': !_vm.inited}},[_c('div',{ref:"inner",staticClass:"cr-row-inner"},[_vm._t("default"),_c('div',{staticClass:"clearfix"})],2)])};
   var __vue_staticRenderFns__ = [];
 
     /* style */

@@ -1,5 +1,5 @@
 <template lang="pug">
-.cr-row
+.cr-row(:class="{'cr-row-cloak': !inited}")
   .cr-row-inner(ref="inner")
     slot
     .clearfix
@@ -94,44 +94,46 @@ const update = async function() {
       currentRow.push(col)
     }
   }
-  if (rows.length === 0) {
-    return
-  }
-  // when screen narrower than first col, first row is empty, so remove it
-  if (rows[0].length === 0) {
-    rows.shift()
-  }
-  // grow col
-  for (const row of rows) {
-    row[0].isFirstCol = true
-    hp.arrayLast(row).isLastCol = true
-    // sort
-    let restW = rowWidth // rest width; 递减后剩余宽度
-    let growCol
-    row.forEach((col, i) => {
-      if (vf.isPropTrue(col.grow)) {
-        growCol = col
+  if (rows.length !== 0) {
+    // when screen narrower than first col, first row is empty, so remove it
+    if (rows[0].length === 0) {
+      rows.shift()
+    }
+    // grow col
+    for (const row of rows) {
+      row[0].isFirstCol = true
+      hp.arrayLast(row).isLastCol = true
+      // sort
+      let restW = rowWidth // rest width; 递减后剩余宽度
+      let growCol
+      row.forEach((col, i) => {
+        if (vf.isPropTrue(col.grow)) {
+          growCol = col
+        }
+        restW -= col._realWidth
+      })
+      if (growCol) {
+        growCol.cssWidth += restW
+        growCol._realWidth += restW
+      } else if (restW <= 3) {
+        // 当剩下3px以内的剩余时, 加到最后一列上
+        const lastCol = hp.arrayLast(row)
+        lastCol.cssWidth += restW
+        lastCol._realWidth += restW
       }
-      restW -= col._realWidth
+    }
+    hp.arrayLast(rows).forEach(col => {
+      col.isLastRow = true
     })
-    if (growCol) {
-      growCol.cssWidth += restW
-      growCol._realWidth += restW
-    } else if (restW <= 3) {
-      // 当剩下3px以内的剩余时, 加到最后一列上
-      const lastCol = hp.arrayLast(row)
-      lastCol.cssWidth += restW
-      lastCol._realWidth += restW
+    this.$emit('updated', this)
+    // update children row
+    for (const child of this.childrenRows) {
+      child.update()
     }
   }
-  hp.arrayLast(rows).forEach(col => {
-    col.isLastRow = true
+  this.$nextTick(() => {
+    this.inited = true
   })
-  this.$emit('updated', this)
-  // update children row
-  for (const child of this.childrenRows) {
-    child.update()
-  }
 }
 
 const DEFAULT_GUTTER = 16
@@ -231,8 +233,8 @@ export default {
           break
         }
       }
+      this.parentRow = parentRow
       if (parentRow) {
-        this.parentRow = parentRow
         this.parentRow.childrenRows.push(this)
       }
     },
@@ -260,7 +262,7 @@ export default {
   },
   beforeDestroy() {
     if (this.parentRow) {
-      hp.arrayRemove(this, this.parentRow.childrenRows)
+      hp.arrayRemove(this.parentRow.childrenRows, this)
     }
     if (this.onresize) {
       hp.offDOM(window, 'resize', this.onresize)
@@ -280,6 +282,9 @@ function getPrioritized(...arr) {
 
 <style>
 .cr-row{
+}
+.cr-row-cloak{
+  visibility: hidden;
 }
 .cr-row-inner > br{
   display: none;
