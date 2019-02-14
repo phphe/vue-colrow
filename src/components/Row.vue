@@ -260,7 +260,7 @@ export default {
   },
   beforeDestroy() {
     if (this.parentRow) {
-      hp.arrayRemove(this, this.parentRow.childrenRows)
+      hp.arrayRemove(this.parentRow.childrenRows, this)
     }
     if (this.onresize) {
       hp.offDOM(window, 'resize', this.onresize)
