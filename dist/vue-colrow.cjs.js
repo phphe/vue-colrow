@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.1.6
+ * vue-colrow v1.1.7
  * (c) 2019-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -497,7 +497,7 @@ var script = {
   },
   beforeDestroy: function beforeDestroy() {
     if (this.parentRow) {
-      hp.arrayRemove(this, this.parentRow.childrenRows);
+      hp.arrayRemove(this.parentRow.childrenRows, this);
     }
 
     if (this.onresize) {
