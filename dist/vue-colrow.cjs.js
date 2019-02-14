@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.1.7
+ * vue-colrow v1.2.0
  * (c) 2019-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -9,351 +9,18 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var promise = _interopDefault(require('core-js/library/fn/promise'));
-var _parseInt = _interopDefault(require('core-js/library/fn/parse-int'));
-var _parseFloat = _interopDefault(require('core-js/library/fn/parse-float'));
-var getIterator = _interopDefault(require('core-js/library/fn/get-iterator'));
 require('core-js/modules/es6.number.constructor');
-require('core-js/modules/es6.string.ends-with');
-require('core-js/modules/web.dom.iterable');
-require('regenerator-runtime/runtime');
 var hp = require('helper-js');
+var values = _interopDefault(require('core-js/library/fn/object/values'));
+var _parseFloat = _interopDefault(require('core-js/library/fn/parse-float'));
+require('core-js/modules/es6.regexp.replace');
+require('core-js/modules/web.dom.iterable');
+require('core-js/modules/es6.string.ends-with');
+require('core-js/modules/es6.function.name');
 var vf = require('vue-functions');
-
-var promise$1 = promise;
-
-var _parseInt$1 = _parseInt;
-
-var _parseFloat$1 = _parseFloat;
-
-var getIterator$1 = getIterator;
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-  try {
-    var info = gen[key](arg);
-    var value = info.value;
-  } catch (error) {
-    reject(error);
-    return;
-  }
-
-  if (info.done) {
-    resolve(value);
-  } else {
-    promise$1.resolve(value).then(_next, _throw);
-  }
-}
-
-function _asyncToGenerator(fn) {
-  return function () {
-    var self = this,
-        args = arguments;
-    return new promise$1(function (resolve, reject) {
-      var gen = fn.apply(self, args);
-
-      function _next(value) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
-      }
-
-      function _throw(err) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-      }
-
-      _next(undefined);
-    });
-  };
-}
-
-var update =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee() {
-    var _this = this;
-
-    var rowWidth, rows, currentRow, raw, growExisted, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, _i, row, restW, growCol, lastCol, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, child;
-
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return this.mountedPromise;
-
-          case 2:
-            this.updateWidth();
-            rowWidth = this.width + this.gutterX;
-            rows = [];
-
-            if (this.$refs.inner) {
-              _context.next = 7;
-              break;
-            }
-
-            return _context.abrupt("return");
-
-          case 7:
-            // row只允许一个grow col
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _iteratorError = undefined;
-            _context.prev = 10;
-
-            _loop = function _loop() {
-              var el = _step.value;
-
-              if (el.tagName === 'BR') {
-                // new row
-                currentRow = null;
-                return "continue";
-              }
-
-              if (hp.hasClass(el, 'clearfix')) {
-                // don't add .clearfix as row child
-                return "continue";
-              }
-
-              if (!hp.hasClass(el, 'cr-col')) {
-                console.error("Only Col, br can be child of Row. Wrong element:", el);
-              }
-
-              var id = el.getAttribute('data-vm-id');
-              var col = _this.colsMapping[id];
-              col.isFirstCol = false;
-              col.isLastCol = false;
-              col.isLastRow = false;
-
-              if (vf.isPropTrue(col.grow)) {
-                if (growExisted) {
-                  // new row
-                  currentRow = null;
-                } else {
-                  growExisted = true;
-                }
-              } //
-
-
-              if (!currentRow) {
-                // new row
-                growExisted = false;
-                currentRow = [];
-                rows.push(currentRow);
-                raw = 0;
-              } //
-
-
-              var cw = void 0; // col width. _realWidth. contain margin
-
-              var setCw = function setCw(col, w) {
-                var isPx;
-
-                if (hp.isString(w)) {
-                  if (w.endsWith('px')) {
-                    isPx = true;
-                  }
-
-                  w = _parseFloat$1(w);
-                }
-
-                if (!isPx && w <= 1) {
-                  // width is proportion; 小于等于1的是比例
-                  cw = _parseInt$1(rowWidth * w);
-                  cw = cw > rowWidth ? rowWidth : cw; // col max width is 100%
-
-                  col.cssWidth = cw - _this.gutterX;
-                } else {
-                  // width is px; 指定像素
-                  cw = w + _this.gutterX;
-                  cw = cw > rowWidth ? rowWidth : cw; // col max width is 100%
-
-                  col.cssWidth = w;
-                }
-              };
-
-              var restW = rowWidth - raw;
-
-              var cpw = _this.getColCurrentPropWidth(col, rowWidth, restW); // col prop width for current screen size
-
-
-              setCw(col, cpw); //
-
-              col._realWidth = cw;
-              raw += cw;
-
-              if (raw > rowWidth) {
-                // new row
-                growExisted = false;
-                currentRow = [col];
-                rows.push(currentRow);
-                raw = cw;
-              } else {
-                currentRow.push(col);
-              }
-            };
-
-            _iterator = getIterator$1(this.$refs.inner.children);
-
-          case 13:
-            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-              _context.next = 20;
-              break;
-            }
-
-            _ret = _loop();
-
-            if (!(_ret === "continue")) {
-              _context.next = 17;
-              break;
-            }
-
-            return _context.abrupt("continue", 17);
-
-          case 17:
-            _iteratorNormalCompletion = true;
-            _context.next = 13;
-            break;
-
-          case 20:
-            _context.next = 26;
-            break;
-
-          case 22:
-            _context.prev = 22;
-            _context.t0 = _context["catch"](10);
-            _didIteratorError = true;
-            _iteratorError = _context.t0;
-
-          case 26:
-            _context.prev = 26;
-            _context.prev = 27;
-
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
-            }
-
-          case 29:
-            _context.prev = 29;
-
-            if (!_didIteratorError) {
-              _context.next = 32;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 32:
-            return _context.finish(29);
-
-          case 33:
-            return _context.finish(26);
-
-          case 34:
-            if (!(rows.length === 0)) {
-              _context.next = 36;
-              break;
-            }
-
-            return _context.abrupt("return");
-
-          case 36:
-            // when screen narrower than first col, first row is empty, so remove it
-            if (rows[0].length === 0) {
-              rows.shift();
-            } // grow col
-
-
-            for (_i = 0; _i < rows.length; _i++) {
-              row = rows[_i];
-              row[0].isFirstCol = true;
-              hp.arrayLast(row).isLastCol = true; // sort
-
-              restW = rowWidth; // rest width; 递减后剩余宽度
-
-              growCol = void 0;
-              row.forEach(function (col, i) {
-                if (vf.isPropTrue(col.grow)) {
-                  growCol = col;
-                }
-
-                restW -= col._realWidth;
-              });
-
-              if (growCol) {
-                growCol.cssWidth += restW;
-                growCol._realWidth += restW;
-              } else if (restW <= 3) {
-                // 当剩下3px以内的剩余时, 加到最后一列上
-                lastCol = hp.arrayLast(row);
-                lastCol.cssWidth += restW;
-                lastCol._realWidth += restW;
-              }
-            }
-
-            hp.arrayLast(rows).forEach(function (col) {
-              col.isLastRow = true;
-            });
-            this.$emit('updated', this); // update children row
-
-            _iteratorNormalCompletion2 = true;
-            _didIteratorError2 = false;
-            _iteratorError2 = undefined;
-            _context.prev = 43;
-
-            for (_iterator2 = getIterator$1(this.childrenRows); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              child = _step2.value;
-              child.update();
-            }
-
-            _context.next = 51;
-            break;
-
-          case 47:
-            _context.prev = 47;
-            _context.t1 = _context["catch"](43);
-            _didIteratorError2 = true;
-            _iteratorError2 = _context.t1;
-
-          case 51:
-            _context.prev = 51;
-            _context.prev = 52;
-
-            if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-              _iterator2.return();
-            }
-
-          case 54:
-            _context.prev = 54;
-
-            if (!_didIteratorError2) {
-              _context.next = 57;
-              break;
-            }
-
-            throw _iteratorError2;
-
-          case 57:
-            return _context.finish(54);
-
-          case 58:
-            return _context.finish(51);
-
-          case 59:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, this, [[10, 22, 26, 34], [27,, 29, 33], [43, 47, 51, 59], [52,, 54, 58]]);
-  }));
-
-  return function update() {
-    return _ref.apply(this, arguments);
-  };
-}();
 
 var DEFAULT_GUTTER = 16;
 var script = {
-  isColRow_row: true,
   props: {
     gutter: {
       default: DEFAULT_GUTTER,
@@ -362,170 +29,54 @@ var script = {
   },
   // components: {},
   data: function data() {
-    var _this2 = this;
-
     return {
-      mountedPromise: new promise$1(function (resolve, reject) {
-        _this2._mountedResolve = resolve;
-      }),
-      width: null,
       gutterX: null,
-      gutterY: null,
-      colsMapping: {},
-      inited: false,
-      // structure
-      parentRow: null,
-      childrenRows: []
+      gutterY: null
     };
   },
   computed: {
-    colStyle: function colStyle() {
+    cStyle: function cStyle() {
       return {
-        marginRight: this.gutterX + 'px',
-        marginBottom: this.gutterY + 'px'
+        marginRight: "-".concat(this.gutterX, "px"),
+        marginBottom: "-".concat(this.gutterY, "px")
+      };
+    },
+    cInnerStyle: function cInnerStyle() {
+      return {
+        width: "calc(100% + ".concat(this.gutterX, "px)")
       };
     }
   },
-  // watch: {},
-  methods: {
-    updateWidth: function updateWidth() {
-      this.width = this.$el.offsetWidth;
-    },
-    updateGutter: function updateGutter() {
-      var gutter = this.gutter;
-      var t = hp.isArray(gutter) ? gutter : [gutter, gutter];
-
-      if (t[0] == null) {
-        t[0] = DEFAULT_GUTTER;
-      }
-
-      if (t[1] == null) {
-        t[1] = DEFAULT_GUTTER;
-      }
-
-      this.gutterX = t[0];
-      this.gutterY = t[1];
-    },
-    getColWidthProp: function getColWidthProp(col) {
-      if (col.width === 'auto') {
-        if (vf.isPropTrue(col.grow)) {
-          return '1px';
-        } else {
-          return 1;
-        }
-      } else {
-        return col.width;
-      }
-    },
-    // get responsive width
-    getColCurrentPropWidth: function getColCurrentPropWidth(col, rowWidth, restW) {
-      var w = window.innerWidth;
-      var cw = this.getColWidthProp(col);
-      var r;
-
-      if (w < 768) {
-        r = getPrioritized(col.xs, cw);
-      } else if (w < 992) {
-        r = getPrioritized(col.sm, cw);
-      } else if (w < 1200) {
-        r = getPrioritized(col.md, col.sm, cw);
-      } else {
-        r = getPrioritized(col.lg, col.md, col.sm, cw);
-      }
-
-      if (hp.isFunction(r)) {
-        return r(rowWidth, restW);
-      }
-
-      return r;
-    },
-    // find last col, row
-    update: update,
-    // updateDebounced,
-    registerCol: function registerCol(colVm) {
-      this.colsMapping[colVm._uid] = colVm;
-      this.updateDebounced();
-    },
-    unregisterCol: function unregisterCol(colVm) {
-      delete this.colsMapping[colVm._uid];
-      this.updateDebounced();
-    },
-    findParentRow: function findParentRow() {
-      var parentRow = this;
-
-      while (true) {
-        parentRow = parentRow.$parent;
-
-        if (!parentRow || parentRow.$options.isColRow_row) {
-          break;
-        }
-      }
-
-      if (parentRow) {
-        this.parentRow = parentRow;
-        this.parentRow.childrenRows.push(this);
-      }
-    }
-  },
-  created: function created() {
-    this.updateDebounced = hp.debounce(update);
-    this.findParentRow();
-  },
-  mounted: function mounted() {
-    var _this3 = this;
-
-    this._mountedResolve();
-
-    this.$watch('gutter', this.updateGutter, {
+  watch: {
+    gutter: {
+      immediate: true,
       deep: true,
-      immediate: true
-    });
-    this.$watch('gutterX', this.updateDebounced);
-    this.$watch('gutterY', this.updateDebounced); //
+      handler: function handler(gutter) {
+        var t = hp.isArray(gutter) ? gutter : [gutter, gutter];
 
-    this.onresize = function (e) {
-      if (!_this3.parentRow) {
-        _this3.update();
+        if (t[0] == null) {
+          t[0] = DEFAULT_GUTTER;
+        }
+
+        if (t[1] == null) {
+          t[1] = DEFAULT_GUTTER;
+        }
+
+        this.gutterX = t[0];
+        this.gutterY = t[1];
       }
-    };
-
-    hp.onDOM(window, 'resize', this.onresize); //
-
-    if (!this.parentRow) {
-      this.update();
     }
-  },
-  beforeDestroy: function beforeDestroy() {
-    if (this.parentRow) {
-      hp.arrayRemove(this.parentRow.childrenRows, this);
-    }
+  } // methods: {},
+  // created() {},
+  // mounted() {},
+  // beforeDestroy() {},
 
-    if (this.onresize) {
-      hp.offDOM(window, 'resize', this.onresize);
-    }
-  }
 };
-
-function getPrioritized() {
-  for (var _len = arguments.length, arr = new Array(_len), _key = 0; _key < _len; _key++) {
-    arr[_key] = arguments[_key];
-  }
-
-  for (var _i2 = 0; _i2 < arr.length; _i2++) {
-    var item = arr[_i2];
-
-    if (item != null) {
-      return item;
-    }
-  }
-
-  return hp.arrayLast(arr);
-}
 
 /* script */
             const __vue_script__ = script;
 /* template */
-var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"cr-row"},[_c('div',{ref:"inner",staticClass:"cr-row-inner"},[_vm._t("default"),_c('div',{staticClass:"clearfix"})],2)])};
+var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"cr-row",style:(_vm.cStyle)},[_c('div',{staticClass:"cr-row-inner",style:(_vm.cInnerStyle)},[_vm._t("default")],2)])};
 var __vue_staticRenderFns__ = [];
 
   /* style */
@@ -576,65 +127,196 @@ var __vue_staticRenderFns__ = [];
     undefined
   );
 
-//
+var values$1 = values;
+
+var _parseFloat$1 = _parseFloat;
+
+var BREAK_POINTS = {
+  xs: 544,
+  sm: 768,
+  md: 992,
+  lg: 1200
+};
 var script$1 = {
+  BREAK_POINTS: BREAK_POINTS,
   props: {
-    width: {
-      default: 'auto'
-    },
+    width: {},
     grow: {},
     // responsive
     xs: {},
     sm: {},
     md: {},
-    lg: {}
+    lg: {},
+    xl: {}
   },
-  components: {},
+  // components: {},
   data: function data() {
     return {
-      vmId: this._uid,
-      cssWidth: null,
-      isFirstCol: false,
-      isLastCol: false,
-      isLastRow: false
+      className: "cr-col-".concat(this._uid)
     };
   },
   computed: {
-    colStyle: function colStyle() {
-      var r = {
-        width: this.cssWidth + 'px'
+    cStyle: function cStyle() {
+      return {
+        marginRight: "".concat(this.$parent.gutterX, "px"),
+        marginBottom: "".concat(this.$parent.gutterY, "px")
       };
+    },
+    cBaseStyle: function cBaseStyle() {
+      // base style
+      var styleText = ".".concat(this.className, "{\n");
+      var w = this.width;
 
-      if (this.isFirstCol) {
-        r.clear = 'both';
+      if (this.width == null) {
+        w = vf.isPropTrue(this.grow) ? '1px' : 1;
       }
 
-      if (this.isLastCol) {
-        r.marginRight = '0';
+      styleText += autoPrefix('width', this.widthText(w), {
+        target: 'value'
+      });
+
+      if (this.grow != null) {
+        var grow = this.grow;
+
+        if (this.grow === '') {
+          grow = 1;
+        }
+
+        styleText += autoPrefix('flex-grow', grow);
       }
 
-      if (this.isLastRow) {
-        r.marginBottom = '0';
+      styleText += '}';
+      return styleText;
+    },
+    cResponsiveStyle: function cResponsiveStyle() {
+      var _this = this;
+
+      // responsive
+      var styleText = '';
+      var pointNames = ['xs', 'sm', 'md', 'lg', 'xl'].filter(function (name) {
+        return _this[name];
+      });
+
+      for (var i = 0; i < pointNames.length; i++) {
+        var conditions = [];
+        var pointName = pointNames[i];
+        var prev = pointNames[i - 1];
+
+        if (prev && BREAK_POINTS[prev]) {
+          conditions.push("(min-width: ".concat(BREAK_POINTS[prev], "px)"));
+        }
+
+        if (BREAK_POINTS[pointName]) {
+          conditions.push("(max-width: ".concat(BREAK_POINTS[pointName], "px)"));
+        }
+
+        styleText += "\n        @media ".concat(conditions.join(' and '), " {\n          .").concat(this.className, "{\n            ").concat(autoPrefix('width', this[pointName], {
+          target: 'value'
+        }), "\n          }\n        }\n        ");
       }
 
-      return r;
+      return styleText;
     }
   },
-  // watch: {},
-  // methods: {},
-  created: function created() {
-    this.$parent.registerCol(this);
+  watch: {
+    cBaseStyle: {
+      immediate: true,
+      handler: function handler(styleText, old) {
+        if (styleText !== old) {
+          this.addStylesheet('base', styleText);
+        }
+      }
+    },
+    cResponsiveStyle: {
+      immediate: true,
+      handler: function handler(styleText, old) {
+        if (styleText !== old) {
+          this.addStylesheet('responsive', styleText);
+        }
+      }
+    }
   },
+  methods: {
+    // convert width to css text
+    widthText: function widthText(width) {
+      if (hp.isString(width)) {
+        if (width === 'auto' || width.endsWith('px')) {
+          return width;
+        } else {
+          width = _parseFloat$1(width);
+        }
+      }
+
+      if (width <= 1) {
+        return "calc(100% * ".concat(width, " - ").concat(this.$parent.gutterX, "px)");
+      } else {
+        return "".concat(width, "px");
+      }
+    },
+    addStylesheet: function addStylesheet(name, styleText) {
+      if (!this._stylesheets) {
+        this._stylesheets = {};
+      }
+
+      var sheets = this._stylesheets;
+
+      if (sheets[name]) {
+        removeEl(sheets[name]);
+        delete sheets[name];
+      }
+
+      if (styleText) {
+        var style = sheets[name] = document.createElement('style');
+        style.type = 'text/css';
+        style.appendChild(document.createTextNode(styleText));
+        var head = document.head;
+        head.appendChild(style);
+      }
+    }
+  },
+  // created() {},
   // mounted() {},
   beforeDestroy: function beforeDestroy() {
-    this.$parent.unregisterCol(this);
+    if (this._stylesheets) {
+      values$1(this._stylesheets).forEach(function (el) {
+        return removeEl(el);
+      });
+
+      this._stylesheets = null;
+    }
   }
 };
+
+function removeEl(el) {
+  el.parentNode.removeChild(el);
+}
+
+function autoPrefix(name, value) {
+  var opt = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  var prefixes = ['-webkit-', '-moz-', '-ms-', '-o-'];
+  var t = "".concat(name, ": ").concat(value, ";");
+  var lines = [];
+
+  if (opt.target === 'value') {
+    for (var _i = 0; _i < prefixes.length; _i++) {
+      var prefix = prefixes[_i];
+      lines.push(t.replace(': ', ': ' + prefix));
+    }
+  } else {
+    for (var _i2 = 0; _i2 < prefixes.length; _i2++) {
+      var _prefix = prefixes[_i2];
+      lines.push(_prefix + t);
+    }
+  }
+
+  lines.push(t);
+  return lines.join('\n');
+}
 
 /* script */
             const __vue_script__$1 = script$1;
 /* template */
-var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"cr-col",style:([_vm.$parent.colStyle, _vm.colStyle]),attrs:{"data-vm-id":_vm.vmId,"isLastCol":_vm.isLastCol}},[_vm._t("default")],2)};
+var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"cr-col",class:_vm.className,style:(_vm.cStyle)},[_vm._t("default")],2)};
 var __vue_staticRenderFns__$1 = [];
 
   /* style */
@@ -685,5 +367,66 @@ var __vue_staticRenderFns__$1 = [];
     undefined
   );
 
+//
+//
+//
+//
+var script$2 = {};
+
+/* script */
+            const __vue_script__$2 = script$2;
+/* template */
+var __vue_render__$2 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"cr-break-row"})};
+var __vue_staticRenderFns__$2 = [];
+
+  /* style */
+  const __vue_inject_styles__$2 = undefined;
+  /* scoped */
+  const __vue_scope_id__$2 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$2 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$2 = false;
+  /* component normalizer */
+  function __vue_normalize__$2(
+    template, style, script,
+    scope, functional, moduleIdentifier,
+    createInjector, createInjectorSSR
+  ) {
+    const component = (typeof script === 'function' ? script.options : script) || {};
+
+    // For security concerns, we use only base name in production mode.
+    component.__file = "BreakRow.vue";
+
+    if (!component.render) {
+      component.render = template.render;
+      component.staticRenderFns = template.staticRenderFns;
+      component._compiled = true;
+
+      if (functional) component.functional = true;
+    }
+
+    component._scopeId = scope;
+
+    return component
+  }
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var BreakRow = __vue_normalize__$2(
+    { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
+    __vue_inject_styles__$2,
+    __vue_script__$2,
+    __vue_scope_id__$2,
+    __vue_is_functional_template__$2,
+    __vue_module_identifier__$2,
+    undefined,
+    undefined
+  );
+
 exports.Row = Row;
 exports.Col = Col;
+exports.BreakRow = BreakRow;

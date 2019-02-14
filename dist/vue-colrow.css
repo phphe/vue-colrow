@@ -1,2 +1,3 @@
-.cr-row-inner>br{display:none}.clearfix{clear:both}
-.cr-col{float:left}
+.cr-row{width:100%}.cr-row-inner{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap}
+
+.cr-break-row{width:100%}
