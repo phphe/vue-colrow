@@ -3,15 +3,9 @@
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var hp = require('helper-js');
-var __vue_normalize__ = _interopDefault(require('vue-runtime-helpers/dist/normalize-component.mjs'));
-var vf = require('vue-functions');
+import { isArray, isString } from 'helper-js';
+import __vue_normalize__ from 'vue-runtime-helpers/dist/normalize-component.mjs';
+import { isPropTrue } from 'vue-functions';
 
 //
 var DEFAULT_GUTTER = 16;
@@ -52,7 +46,7 @@ var script = {
       deep: true,
 
       handler(gutter) {
-        var t = hp.isArray(gutter) ? gutter : [gutter, gutter];
+        var t = isArray(gutter) ? gutter : [gutter, gutter];
 
         if (t[0] == null) {
           t[0] = DEFAULT_GUTTER;
@@ -161,7 +155,7 @@ var script$1 = {
       var w = this.width;
 
       if (this.width == null) {
-        w = vf.isPropTrue(this.grow) ? '1px' : 1;
+        w = isPropTrue(this.grow) ? '1px' : 1;
       }
 
       styleText += autoPrefix('width', this.widthText(w), {
@@ -234,7 +228,7 @@ var script$1 = {
   methods: {
     // convert width to css text
     widthText(width) {
-      if (hp.isString(width)) {
+      if (isString(width)) {
         if (width === 'auto' || width.endsWith('px')) {
           return width;
         } else {
@@ -397,6 +391,4 @@ var __vue_component__$2 = __vue_normalize__({
   staticRenderFns: __vue_staticRenderFns__$2
 }, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2, __vue_module_identifier__$2, false, undefined, undefined, undefined);
 
-exports.BreakRow = __vue_component__$2;
-exports.Col = __vue_component__$1;
-exports.Row = __vue_component__;
+export { __vue_component__$2 as BreakRow, __vue_component__$1 as Col, __vue_component__ as Row };
