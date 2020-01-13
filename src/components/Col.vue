@@ -20,6 +20,7 @@ export default {
     width: {},
     grow: {},
     // responsive
+    // todo fix responsive stylesheet 为responsive生成的style width无效
     xs: {},
     sm: {},
     md: {},

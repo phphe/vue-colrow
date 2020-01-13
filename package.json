@@ -1,61 +1,44 @@
 {
   "name": "vue-colrow",
-  "version": "1.2.0",
-  "description": "Components Col and Row are dedicated to layout normal and responsive web page easily.",
+  "version": "1.2.1",
+  "description": "A draggable sortable nested vue tree component.",
   "main": "dist/vue-colrow.cjs.js",
-  "module": "dist/vue-colrow.es.js",
-  "author": "phphe <phphe@outlook.com>",
-  "license": "MIT",
+  "module": "dist/vue-colrow.esm.js",
+  "files": [
+    "dist"
+  ],
+  "unpkg": "dist/vue-colrow.js",
+  "author": "phphe <phphe@outlook.com> (https://github.com/phphe)",
+  "bugs": {
+    "url": "https://github.com/phphe/vue-colrow/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/phphe/vue-colrow.git"
   },
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build-vue": "vue-cli-service build",
-    "build": "node build/build-lib.js",
-    "lint": "vue-cli-service lint"
+    "build:web": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "build": "rogo"
   },
   "dependencies": {
-    "helper-js": "^1.3.2",
-    "vue": "^2.5.21",
-    "vue-functions": "^1.0.1"
+    "@babel/runtime": "^7.7.7",
+    "helper-js": "^1.4.27",
+    "vue-functions": "^2.0.2",
+    "vue-runtime-helpers": "^1.1.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.1",
-    "@vue/cli-plugin-eslint": "^3.0.1",
-    "@vue/cli-service": "^3.0.1",
-    "babel-eslint": "^10.0.1",
-    "bili": "^3.4.2",
-    "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "pug": "^2.0.3",
+    "@vue/cli-plugin-babel": "^4.1.0",
+    "@vue/cli-service": "^4.1.0",
+    "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
-    "rollup-plugin-vue": "^4.3.2",
-    "vue-template-compiler": "^2.5.21"
+    "rogo": "^1.0.2",
+    "rollup-plugin-vue": "^5.1.1",
+    "sass": "^1.23.7",
+    "sass-loader": "^8.0.0",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {},
-    "parserOptions": {
-      "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "license": "MIT"
 }
