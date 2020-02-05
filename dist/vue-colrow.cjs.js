@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.2.3
+ * vue-colrow v1.2.4
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
@@ -251,7 +251,7 @@ var script$1 = {
     },
 
     addStylesheet(name, styleText) {
-      if (process.server) {
+      if (!hp.isDocumentExisted()) {
         // for ssr
         return;
       }

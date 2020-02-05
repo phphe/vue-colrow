@@ -118,7 +118,7 @@ export default {
       }
     },
     addStylesheet(name, styleText) {
-      if (process.server) {
+      if (!hp.isDocumentExisted()) {
         // for ssr
         return
       }

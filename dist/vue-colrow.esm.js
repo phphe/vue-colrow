@@ -1,9 +1,9 @@
 /*!
- * vue-colrow v1.2.3
+ * vue-colrow v1.2.4
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
-import { isArray, isString } from 'helper-js';
+import { isArray, isString, isDocumentExisted } from 'helper-js';
 import __vue_normalize__ from 'vue-runtime-helpers/dist/normalize-component.mjs';
 
 //
@@ -245,7 +245,7 @@ var script$1 = {
     },
 
     addStylesheet(name, styleText) {
-      if (process.server) {
+      if (!isDocumentExisted()) {
         // for ssr
         return;
       }

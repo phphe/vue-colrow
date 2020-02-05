@@ -1,6 +1,6 @@
 {
   "name": "vue-colrow",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A draggable sortable nested vue tree component.",
   "main": "dist/vue-colrow.cjs.js",
   "module": "dist/vue-colrow.esm.js",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.7.7",
-    "helper-js": "^1.4.28",
+    "helper-js": "^1.4.30",
     "vue-runtime-helpers": "^1.1.2"
   },
   "devDependencies": {

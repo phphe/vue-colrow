@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.2.3
+ * vue-colrow v1.2.4
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
@@ -820,6 +820,16 @@
 	}
 	});
 
+	function isDocumentExisted() {
+	  try {
+	    t = document;
+	  } catch (e) {
+	    return false;
+	  }
+
+	  return true;
+	} // is 各种判断
+
 	function isArray(v) {
 	  return Object.prototype.toString.call(v) === '[object Array]';
 	}
@@ -1138,7 +1148,7 @@
 	      }
 	    },
 	    addStylesheet: function addStylesheet(name, styleText) {
-	      if (process.server) {
+	      if (!isDocumentExisted()) {
 	        // for ssr
 	        return;
 	      }
