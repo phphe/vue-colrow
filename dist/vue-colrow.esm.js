@@ -1,11 +1,10 @@
 /*!
- * vue-colrow v1.2.2
+ * vue-colrow v1.2.3
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
 import { isArray, isString } from 'helper-js';
 import __vue_normalize__ from 'vue-runtime-helpers/dist/normalize-component.mjs';
-import { isPropTrue } from 'vue-functions';
 
 //
 var DEFAULT_GUTTER = 16;
@@ -124,7 +123,9 @@ var script$1 = {
   BREAK_POINTS,
   props: {
     width: {},
-    grow: {},
+    grow: {
+      type: Boolean
+    },
     // responsive
     // todo fix responsive stylesheet 为responsive生成的style width无效
     xs: {},
@@ -155,7 +156,7 @@ var script$1 = {
       var w = this.width;
 
       if (this.width == null) {
-        w = isPropTrue(this.grow) ? '1px' : 1;
+        w = this.grow ? '1px' : 1;
       }
 
       styleText += autoPrefix('width', this.widthText(w), {
@@ -244,6 +245,11 @@ var script$1 = {
     },
 
     addStylesheet(name, styleText) {
+      if (process.server) {
+        // for ssr
+        return;
+      }
+
       if (!this._stylesheets) {
         this._stylesheets = {};
       }

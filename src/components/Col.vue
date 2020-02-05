@@ -5,7 +5,6 @@
 
 <script>
 import * as hp from 'helper-js'
-import * as vf from 'vue-functions'
 
 const BREAK_POINTS = {
   xs: 544,
@@ -18,7 +17,7 @@ export default {
   BREAK_POINTS,
   props: {
     width: {},
-    grow: {},
+    grow: {type: Boolean},
     // responsive
     // todo fix responsive stylesheet 为responsive生成的style width无效
     xs: {},
@@ -45,7 +44,7 @@ export default {
       let styleText = `.${this.className}{\n`
       let w = this.width
       if (this.width == null) {
-        w = vf.isPropTrue(this.grow) ? '1px' : 1
+        w = this.grow ? '1px' : 1
       }
       styleText += autoPrefix('width', this.widthText(w), {target: 'value'})
       if (this.grow != null) {
@@ -119,6 +118,10 @@ export default {
       }
     },
     addStylesheet(name, styleText) {
+      if (process.server) {
+        // for ssr
+        return
+      }
       if (!this._stylesheets) {
         this._stylesheets = {}
       }

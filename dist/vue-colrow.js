@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.2.2
+ * vue-colrow v1.2.3
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
@@ -1011,10 +1011,6 @@
 	  staticRenderFns: __vue_staticRenderFns__
 	}, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
 
-	function isPropTrue(value) {
-	  return value === '' || value;
-	} // the dependences in getter can't be auto resolved. must use exec to include dependences
-
 	//
 	var BREAK_POINTS = {
 	  xs: 544,
@@ -1026,7 +1022,9 @@
 	  BREAK_POINTS: BREAK_POINTS,
 	  props: {
 	    width: {},
-	    grow: {},
+	    grow: {
+	      type: Boolean
+	    },
 	    // responsive
 	    // todo fix responsive stylesheet 为responsive生成的style width无效
 	    xs: {},
@@ -1054,7 +1052,7 @@
 	      var w = this.width;
 
 	      if (this.width == null) {
-	        w = isPropTrue(this.grow) ? '1px' : 1;
+	        w = this.grow ? '1px' : 1;
 	      }
 
 	      styleText += autoPrefix('width', this.widthText(w), {
@@ -1140,6 +1138,11 @@
 	      }
 	    },
 	    addStylesheet: function addStylesheet(name, styleText) {
+	      if (process.server) {
+	        // for ssr
+	        return;
+	      }
+
 	      if (!this._stylesheets) {
 	        this._stylesheets = {};
 	      }
