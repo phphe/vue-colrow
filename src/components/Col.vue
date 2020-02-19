@@ -17,7 +17,7 @@ export default {
   BREAK_POINTS,
   props: {
     width: {},
-    grow: {type: Boolean},
+    grow: {type: [Boolean, Number]},
     // responsive
     // todo fix responsive stylesheet 为responsive生成的style width无效
     xs: {},
@@ -49,7 +49,7 @@ export default {
       styleText += autoPrefix('width', this.widthText(w), {target: 'value'})
       if (this.grow != null) {
         let grow = this.grow
-        if (this.grow === '') {
+        if (this.grow === true) {
           grow = 1
         }
         styleText += autoPrefix('flex-grow', grow)
