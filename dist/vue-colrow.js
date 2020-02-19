@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v1.2.5
+ * vue-colrow v1.2.6-beta
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
@@ -820,16 +820,6 @@
 	}
 	});
 
-	function isDocumentExisted() {
-	  try {
-	    var t = document;
-	  } catch (e) {
-	    return false;
-	  }
-
-	  return true;
-	} // is 各种判断
-
 	function isArray(v) {
 	  return Object.prototype.toString.call(v) === '[object Array]';
 	}
@@ -1033,7 +1023,7 @@
 	  props: {
 	    width: {},
 	    grow: {
-	      type: Boolean
+	      type: [Boolean, Number]
 	    },
 	    // responsive
 	    // todo fix responsive stylesheet 为responsive生成的style width无效
@@ -1069,10 +1059,10 @@
 	        target: 'value'
 	      });
 
-	      if (this.grow != null) {
+	      if (this.grow != null && this.grow !== false) {
 	        var grow = this.grow;
 
-	        if (this.grow === '') {
+	        if (this.grow === true) {
 	          grow = 1;
 	        }
 
@@ -1080,7 +1070,7 @@
 	      }
 
 	      styleText += '}';
-	      return styleText;
+	      return "<style type=\"text/css\">".concat(styleText, "</style>");
 	    },
 	    cResponsiveStyle: function cResponsiveStyle() {
 	      var _this = this;
@@ -1109,27 +1099,10 @@
 	        }), "\n          }\n        }\n        ");
 	      }
 
-	      return styleText;
+	      return "<style type=\"text/css\">".concat(styleText, "</style>");
 	    }
 	  },
-	  watch: {
-	    cBaseStyle: {
-	      immediate: true,
-	      handler: function handler(styleText, old) {
-	        if (styleText !== old) {
-	          this.addStylesheet('base', styleText);
-	        }
-	      }
-	    },
-	    cResponsiveStyle: {
-	      immediate: true,
-	      handler: function handler(styleText, old) {
-	        if (styleText !== old) {
-	          this.addStylesheet('responsive', styleText);
-	        }
-	      }
-	    }
-	  },
+	  // watch: {},
 	  methods: {
 	    // convert width to css text
 	    widthText: function widthText(width) {
@@ -1146,48 +1119,12 @@
 	      } else {
 	        return "".concat(width, "px");
 	      }
-	    },
-	    addStylesheet: function addStylesheet(name, styleText) {
-	      if (!isDocumentExisted()) {
-	        // for ssr
-	        return;
-	      }
-
-	      if (!this._stylesheets) {
-	        this._stylesheets = {};
-	      }
-
-	      var sheets = this._stylesheets;
-
-	      if (sheets[name]) {
-	        removeEl(sheets[name]);
-	        delete sheets[name];
-	      }
-
-	      if (styleText) {
-	        var style = sheets[name] = document.createElement('style');
-	        style.type = 'text/css';
-	        style.appendChild(document.createTextNode(styleText));
-	        var head = document.head;
-	        head.appendChild(style);
-	      }
 	    }
-	  },
-	  // created() {},
+	  } // created() {},
 	  // mounted() {},
-	  beforeDestroy: function beforeDestroy() {
-	    if (this._stylesheets) {
-	      Object.values(this._stylesheets).forEach(function (el) {
-	        return removeEl(el);
-	      });
-	      this._stylesheets = null;
-	    }
-	  }
-	};
+	  // beforeDestroy() {},
 
-	function removeEl(el) {
-	  el.parentNode.removeChild(el);
-	}
+	};
 
 	function autoPrefix(name, value) {
 	  var opt = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -1263,8 +1200,24 @@
 	  return _c("div", {
 	    staticClass: "cr-col",
 	    "class": _vm.className,
-	    style: _vm.cStyle
-	  }, [_vm._t("default")], 2);
+	    style: _vm.cStyle,
+	    attrs: {
+	      "data-width": _vm.width
+	    }
+	  }, [_vm._t("default"), _c("div", {
+	    staticClass: "col-dynamic-style",
+	    staticStyle: {
+	      display: "none"
+	    }
+	  }, [_c("div", {
+	    domProps: {
+	      innerHTML: _vm._s(_vm.cBaseStyle)
+	    }
+	  }), _c("div", {
+	    domProps: {
+	      innerHTML: _vm._s(_vm.cResponsiveStyle)
+	    }
+	  })])], 2);
 	};
 
 	var __vue_staticRenderFns__$1 = [];

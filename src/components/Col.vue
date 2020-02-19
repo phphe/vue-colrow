@@ -1,6 +1,10 @@
 <template lang="pug">
-.cr-col(:class="className" :style="cStyle" )
+.cr-col(:class="className" :style="cStyle" :data-width="width")
   slot
+  //- style sheet
+  div.col-dynamic-style(style="display:none;")
+    div(v-html="cBaseStyle")
+    div(v-html="cResponsiveStyle")
 </template>
 
 <script>
@@ -47,7 +51,7 @@ export default {
         w = this.grow ? '1px' : 1
       }
       styleText += autoPrefix('width', this.widthText(w), {target: 'value'})
-      if (this.grow != null) {
+      if (this.grow != null && this.grow !== false) {
         let grow = this.grow
         if (this.grow === true) {
           grow = 1
@@ -55,7 +59,7 @@ export default {
         styleText += autoPrefix('flex-grow', grow)
       }
       styleText += '}'
-      return styleText
+      return `<style type="text/css">${styleText}</style>`
     },
     cResponsiveStyle() {
       // responsive
@@ -80,27 +84,10 @@ export default {
         }
         `
       }
-      return styleText
+      return `<style type="text/css">${styleText}</style>`
     },
   },
-  watch: {
-    cBaseStyle: {
-      immediate: true,
-      handler(styleText, old) {
-        if (styleText !== old) {
-          this.addStylesheet('base', styleText)
-        }
-      }
-    },
-    cResponsiveStyle: {
-      immediate: true,
-      handler(styleText, old) {
-        if (styleText !== old) {
-          this.addStylesheet('responsive', styleText)
-        }
-      }
-    },
-  },
+  // watch: {},
   methods: {
     // convert width to css text
     widthText(width) {
@@ -117,41 +104,12 @@ export default {
         return `${width}px`
       }
     },
-    addStylesheet(name, styleText) {
-      if (!hp.isDocumentExisted()) {
-        // for ssr
-        return
-      }
-      if (!this._stylesheets) {
-        this._stylesheets = {}
-      }
-      const sheets = this._stylesheets
-      if (sheets[name]) {
-        removeEl(sheets[name])
-        delete sheets[name]
-      }
-      if (styleText) {
-        const style = sheets[name] = document.createElement('style')
-        style.type = 'text/css'
-        style.appendChild(document.createTextNode(styleText))
-        const head = document.head
-        head.appendChild(style)
-      }
-    },
   },
   // created() {},
   // mounted() {},
-  beforeDestroy() {
-    if (this._stylesheets) {
-      Object.values(this._stylesheets).forEach(el => removeEl(el))
-      this._stylesheets = null
-    }
-  },
+  // beforeDestroy() {},
 }
 
-function removeEl(el) {
-  el.parentNode.removeChild(el)
-}
 function autoPrefix(name, value, opt = {}) {
   const prefixes = ['-webkit-', '-moz-', '-ms-', '-o-']
   const t = `${name}: ${value};`
