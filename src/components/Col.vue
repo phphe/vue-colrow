@@ -9,6 +9,7 @@
 
 <script>
 import * as hp from 'helper-js'
+import {ifNeedReduceColWidth} from './Row.vue'
 
 const BREAK_POINTS = {
   xs: 544,
@@ -20,7 +21,7 @@ const BREAK_POINTS = {
 export default {
   BREAK_POINTS,
   props: {
-    width: {},
+    width: {type: [Boolean, Number]},
     grow: {type: [Boolean, Number]},
     // responsive
     // todo fix responsive stylesheet 为responsive生成的style width无效
@@ -29,6 +30,7 @@ export default {
     md: {},
     lg: {},
     xl: {},
+    colWidthReduce: {type: Number, default() {return this.$parent.$options.COL_WIDTH_REDUCE}},
   },
   // components: {},
   data() {
@@ -38,10 +40,11 @@ export default {
   },
   computed: {
     cStyle() {
-      return {
+      const stl = {
         marginRight: `${this.$parent.gutterX}px`,
         marginBottom: `${this.$parent.gutterY}px`,
       }
+      return stl
     },
     cBaseStyle() {
       // base style
@@ -50,13 +53,13 @@ export default {
       if (this.width == null) {
         w = this.grow ? '1px' : 1
       }
-      styleText += autoPrefix('width', this.widthText(w), {target: 'value'})
+      styleText += `width: ${this.widthText(w)};`
       if (this.grow != null && this.grow !== false) {
         let grow = this.grow
         if (this.grow === true) {
           grow = 1
         }
-        styleText += autoPrefix('flex-grow', grow)
+        styleText += `flex-grow: ${grow};`
       }
       styleText += '}'
       return `<style type="text/css">${styleText}</style>`
@@ -79,7 +82,7 @@ export default {
         styleText += `
         @media ${conditions.join(' and ')} {
           .${this.className}{
-            ${autoPrefix('width', this[pointName], {target: 'value'})}
+            width: ${this[pointName]};
           }
         }
         `
@@ -91,15 +94,9 @@ export default {
   methods: {
     // convert width to css text
     widthText(width) {
-      if (hp.isString(width)) {
-        if (width === 'auto' || width.endsWith('px')) {
-          return width
-        } else {
-          width = parseFloat(width)
-        }
-      }
       if (width <= 1) {
-        return `calc(100% * ${width} - ${this.$parent.gutterX}px)`
+        const reduce = ifNeedReduceColWidth ? ` - ${this.colWidthReduce}px` : ''
+        return `calc(100% * ${width} - ${this.$parent.gutterX}px${reduce})`
       } else {
         return `${width}px`
       }
@@ -109,25 +106,10 @@ export default {
   // mounted() {},
   // beforeDestroy() {},
 }
-
-function autoPrefix(name, value, opt = {}) {
-  const prefixes = ['-webkit-', '-moz-', '-ms-', '-o-']
-  const t = `${name}: ${value};`
-  const lines = []
-  if (opt.target === 'value') {
-    for (const prefix of prefixes) {
-      lines.push(t.replace(': ', ': ' + prefix))
-    }
-  } else {
-    for (const prefix of prefixes) {
-      lines.push(prefix + t)
-    }
-  }
-  lines.push(t)
-  return lines.join('\n')
-}
 </script>
 
 <style>
-/* .cr-col{} */
+.cr-col{
+  box-sizing: border-box;
+}
 </style>

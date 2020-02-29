@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser-polyfill.min.js"></script>
+  <script src="./node_modules/vue/dist/vue.js"></script>
+  <script src="./dist/vue-colrow.js"></script>
+  <link rel="stylesheet" href="dist/vue-colrow.css"/>
+</head>
+<body>
+  <div id="app">
+    <row>
+      <v-col :width="1/3">
+        <row>
+          <v-col :width="1/2"><div class="box red"></div></v-col>
+          <v-col :width="1/2"><div class="box red"></div></v-col>
+        </row> 
+      </v-col>
+    </row>
+  </div>
+  <script>
+    Vue.component('row', vueColrow.Row)
+    Vue.component('v-col', vueColrow.Col)
+    Vue.component('breakrow', vueColrow.BreakRow)
+    new Vue({
+      el: '#app',
+    })
+  </script>
+  <style>
+    .box{
+      min-height: 100px;
+    }
+    .red{
+      background: red;
+    }
+    .yellow{
+      background: yellow;
+    }
+  </style>
+</body>
+</html>

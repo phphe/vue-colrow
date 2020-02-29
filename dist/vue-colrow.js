@@ -829,6 +829,8 @@
 	}
 
 	//
+	var MORE = '0px'; // extend row-inner to avoid width slightly insufficient caused by calculation accuracy in different browsers.
+
 	var DEFAULT_GUTTER = 16;
 	var script = {
 	  props: {
@@ -847,13 +849,13 @@
 	  computed: {
 	    cStyle: function cStyle() {
 	      return {
-	        marginRight: "-".concat(this.gutterX, "px"),
+	        marginRight: "calc(-".concat(this.gutterX, "px - ").concat(MORE, ")"),
 	        marginBottom: "-".concat(this.gutterY, "px")
 	      };
 	    },
 	    cInnerStyle: function cInnerStyle() {
 	      return {
-	        width: "calc(100% + ".concat(this.gutterX, "px)")
+	        width: "calc(100% + ".concat(this.gutterX, "px + ").concat(MORE, ")")
 	      };
 	    }
 	  },
@@ -1023,7 +1025,7 @@
 	  props: {
 	    width: {},
 	    grow: {
-	      type: [Boolean, Number]
+	      type: [Boolean, Number, String]
 	    },
 	    // responsive
 	    // todo fix responsive stylesheet 为responsive生成的style width无效
@@ -1041,10 +1043,11 @@
 	  },
 	  computed: {
 	    cStyle: function cStyle() {
-	      return {
+	      var stl = {
 	        marginRight: "".concat(this.$parent.gutterX, "px"),
 	        marginBottom: "".concat(this.$parent.gutterY, "px")
 	      };
+	      return stl;
 	    },
 	    cBaseStyle: function cBaseStyle() {
 	      // base style
@@ -1055,9 +1058,7 @@
 	        w = this.grow ? '1px' : 1;
 	      }
 
-	      styleText += autoPrefix('width', this.widthText(w), {
-	        target: 'value'
-	      });
+	      styleText += "width: ".concat(this.widthText(w), ";");
 
 	      if (this.grow != null && this.grow !== false) {
 	        var grow = this.grow;
@@ -1066,7 +1067,7 @@
 	          grow = 1;
 	        }
 
-	        styleText += autoPrefix('flex-grow', grow);
+	        styleText += "flex-grow: ".concat(grow, ";");
 	      }
 
 	      styleText += '}';
@@ -1094,9 +1095,7 @@
 	          conditions.push("(max-width: ".concat(BREAK_POINTS[pointName], "px)"));
 	        }
 
-	        styleText += "\n        @media ".concat(conditions.join(' and '), " {\n          .").concat(this.className, "{\n            ").concat(autoPrefix('width', this[pointName], {
-	          target: 'value'
-	        }), "\n          }\n        }\n        ");
+	        styleText += "\n        @media ".concat(conditions.join(' and '), " {\n          .").concat(this.className, "{\n            width: ").concat(this[pointName], ";\n          }\n        }\n        ");
 	      }
 
 	      return "<style type=\"text/css\">".concat(styleText, "</style>");
@@ -1115,7 +1114,7 @@
 	      }
 
 	      if (width <= 1) {
-	        return "calc(100% * ".concat(width, " - ").concat(this.$parent.gutterX, "px)");
+	        return "calc((100% - ".concat(MORE, ") * ").concat(width, " - 0.09px - ").concat(this.$parent.gutterX, "px)");
 	      } else {
 	        return "".concat(width, "px");
 	      }
@@ -1125,66 +1124,6 @@
 	  // beforeDestroy() {},
 
 	};
-
-	function autoPrefix(name, value) {
-	  var opt = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-	  var prefixes = ['-webkit-', '-moz-', '-ms-', '-o-'];
-	  var t = "".concat(name, ": ").concat(value, ";");
-	  var lines = [];
-
-	  if (opt.target === 'value') {
-	    var _iteratorNormalCompletion = true;
-	    var _didIteratorError = false;
-	    var _iteratorError = undefined;
-
-	    try {
-	      for (var _iterator = prefixes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	        var prefix = _step.value;
-	        lines.push(t.replace(': ', ': ' + prefix));
-	      }
-	    } catch (err) {
-	      _didIteratorError = true;
-	      _iteratorError = err;
-	    } finally {
-	      try {
-	        if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-	          _iterator["return"]();
-	        }
-	      } finally {
-	        if (_didIteratorError) {
-	          throw _iteratorError;
-	        }
-	      }
-	    }
-	  } else {
-	    var _iteratorNormalCompletion2 = true;
-	    var _didIteratorError2 = false;
-	    var _iteratorError2 = undefined;
-
-	    try {
-	      for (var _iterator2 = prefixes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	        var _prefix = _step2.value;
-	        lines.push(_prefix + t);
-	      }
-	    } catch (err) {
-	      _didIteratorError2 = true;
-	      _iteratorError2 = err;
-	    } finally {
-	      try {
-	        if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-	          _iterator2["return"]();
-	        }
-	      } finally {
-	        if (_didIteratorError2) {
-	          throw _iteratorError2;
-	        }
-	      }
-	    }
-	  }
-
-	  lines.push(t);
-	  return lines.join('\n');
-	}
 
 	/* script */
 	var __vue_script__$1 = script$1;

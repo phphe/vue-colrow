@@ -13,6 +13,8 @@ var hp = require('helper-js');
 var __vue_normalize__ = _interopDefault(require('vue-runtime-helpers/dist/normalize-component.js'));
 
 //
+var MORE = '0px'; // extend row-inner to avoid width slightly insufficient caused by calculation accuracy in different browsers.
+
 var DEFAULT_GUTTER = 16;
 var script = {
   props: {
@@ -33,14 +35,14 @@ var script = {
   computed: {
     cStyle() {
       return {
-        marginRight: "-".concat(this.gutterX, "px"),
+        marginRight: "calc(-".concat(this.gutterX, "px - ").concat(MORE, ")"),
         marginBottom: "-".concat(this.gutterY, "px")
       };
     },
 
     cInnerStyle() {
       return {
-        width: "calc(100% + ".concat(this.gutterX, "px)")
+        width: "calc(100% + ".concat(this.gutterX, "px + ").concat(MORE, ")")
       };
     }
 
@@ -130,7 +132,7 @@ var script$1 = {
   props: {
     width: {},
     grow: {
-      type: [Boolean, Number]
+      type: [Boolean, Number, String]
     },
     // responsive
     // todo fix responsive stylesheet 为responsive生成的style width无效
@@ -150,10 +152,11 @@ var script$1 = {
 
   computed: {
     cStyle() {
-      return {
+      var stl = {
         marginRight: "".concat(this.$parent.gutterX, "px"),
         marginBottom: "".concat(this.$parent.gutterY, "px")
       };
+      return stl;
     },
 
     cBaseStyle() {
@@ -165,9 +168,7 @@ var script$1 = {
         w = this.grow ? '1px' : 1;
       }
 
-      styleText += autoPrefix('width', this.widthText(w), {
-        target: 'value'
-      });
+      styleText += "width: ".concat(this.widthText(w), ";");
 
       if (this.grow != null && this.grow !== false) {
         var grow = this.grow;
@@ -176,7 +177,7 @@ var script$1 = {
           grow = 1;
         }
 
-        styleText += autoPrefix('flex-grow', grow);
+        styleText += "flex-grow: ".concat(grow, ";");
       }
 
       styleText += '}';
@@ -201,9 +202,7 @@ var script$1 = {
           conditions.push("(max-width: ".concat(BREAK_POINTS[pointName], "px)"));
         }
 
-        styleText += "\n        @media ".concat(conditions.join(' and '), " {\n          .").concat(this.className, "{\n            ").concat(autoPrefix('width', this[pointName], {
-          target: 'value'
-        }), "\n          }\n        }\n        ");
+        styleText += "\n        @media ".concat(conditions.join(' and '), " {\n          .").concat(this.className, "{\n            width: ").concat(this[pointName], ";\n          }\n        }\n        ");
       }
 
       return "<style type=\"text/css\">".concat(styleText, "</style>");
@@ -223,7 +222,7 @@ var script$1 = {
       }
 
       if (width <= 1) {
-        return "calc(100% * ".concat(width, " - ").concat(this.$parent.gutterX, "px)");
+        return "calc((100% - ".concat(MORE, ") * ").concat(width, " - 0.09px - ").concat(this.$parent.gutterX, "px)");
       } else {
         return "".concat(width, "px");
       }
@@ -234,26 +233,6 @@ var script$1 = {
   // beforeDestroy() {},
 
 };
-
-function autoPrefix(name, value) {
-  var opt = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var prefixes = ['-webkit-', '-moz-', '-ms-', '-o-'];
-  var t = "".concat(name, ": ").concat(value, ";");
-  var lines = [];
-
-  if (opt.target === 'value') {
-    for (var prefix of prefixes) {
-      lines.push(t.replace(': ', ': ' + prefix));
-    }
-  } else {
-    for (var _prefix of prefixes) {
-      lines.push(_prefix + t);
-    }
-  }
-
-  lines.push(t);
-  return lines.join('\n');
-}
 
 /* script */
 var __vue_script__$1 = script$1;

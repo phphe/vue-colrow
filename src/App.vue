@@ -1,6 +1,8 @@
 <template lang="pug">
 #app
   Row
+    Col(:width="1/nn" v-for="n in nn")
+      .box.red
     Col(:width="0.5")
       Row
         Col(:width="0.5")
@@ -14,6 +16,13 @@
     Col(:width="0.2")
       .box.red
     BreakRow
+    Col(grow)
+      .box.red
+    Col(:width="0.2")
+      .box.red
+    BreakRow
+    Col(grow)
+      .box.red
     Col
       h2 2
     Col(:width="0.2")
@@ -81,15 +90,28 @@ import BreakRow from './components/BreakRow.vue'
 export default {
   components: {Row, Col, BreakRow},
   data() {
-    return {}
+    return {
+      nn: 5,
+    }
   },
   // computed: {},
   // watch: {},
-  methods: {
-    calcWidth: rowWidth => 1 / parseInt(rowWidth / 300),
-  },
+  // methods: {},
   // created() {},
-  // mounted() {},
+  async mounted() {
+    const arr = [];
+    for (let index = 1; index <= 24; index++) {
+      this.nn = index
+      await this.$nextTick()
+      let col1 = this.$el.querySelector('.cr-col')
+      let w1 = col1.getBoundingClientRect().width
+      let w2 = col1.parentElement.getBoundingClientRect().width
+      arr.push((w1+16) *this.nn - w2)
+    }
+    console.log(arr);
+    console.log(Math.min(...arr), Math.max(...arr));
+    
+  },
 }
 </script>
 

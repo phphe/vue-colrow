@@ -7,11 +7,19 @@
 <script>
 import * as hp from 'helper-js'
 
-const DEFAULT_GUTTER = 16
+
+let _ifNeedReduceColWidth
+try {
+  _ifNeedReduceColWidth = !window.webkitURL
+} catch (error) {}
+
+export const ifNeedReduceColWidth = _ifNeedReduceColWidth
 
 export default {
+  DEFAULT_GUTTER: 16,
+  COL_WIDTH_REDUCE: 0.09, // only for non-webkit browsers
   props: {
-    gutter: {default: DEFAULT_GUTTER, type: [Number, Array]},
+    gutter: {default() { return this.$options.DEFAULT_GUTTER }, type: [Number, Array]},
   },
   // components: {},
   data() {
@@ -23,7 +31,7 @@ export default {
   computed: {
     cStyle() {
       return {
-        marginRight: `-${this.gutterX}px`,
+        marginRight: `calc(-${this.gutterX}px)`,
         marginBottom: `-${this.gutterY}px`,
       }
     },
