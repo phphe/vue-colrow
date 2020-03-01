@@ -1,35 +1,30 @@
 <template lang="pug">
-.cr-col(:class="className" :style="cStyle" :data-width="width")
+.cr-col(:class="className")
   slot
   //- style sheet
-  div.col-dynamic-style(style="display:none;")
-    div(v-html="cBaseStyle")
-    div(v-html="cResponsiveStyle")
+  .cr-dynamic-style(style="display:none;")
+    div(v-html="styleText")
 </template>
 
 <script>
 import * as hp from 'helper-js'
 import {ifNeedReduceColWidth} from './Row.vue'
 
-const BREAK_POINTS = {
-  xs: 544,
-  sm: 768,
-  md: 992,
-  lg: 1200,
-}
-
 export default {
-  BREAK_POINTS,
   props: {
-    width: {type: [Boolean, Number]},
+    width: {type: [Boolean, Number, String]},
     grow: {type: [Boolean, Number]},
     // responsive
-    // todo fix responsive stylesheet 为responsive生成的style width无效
-    xs: {},
-    sm: {},
-    md: {},
-    lg: {},
-    xl: {},
+    xs: {type: [Boolean, Number, String]},
+    xsGrow: {type: [Boolean, Number]},
+    sm: {type: [Boolean, Number, String]},
+    smGrow: {type: [Boolean, Number]},
+    md: {type: [Boolean, Number, String]},
+    mdGrow: {type: [Boolean, Number]},
+    lg: {type: [Boolean, Number, String]},
+    lgGrow: {type: [Boolean, Number]},
+    xl: {type: [Boolean, Number, String]},
+    xlGrow: {type: [Boolean, Number]},
     colWidthReduce: {type: Number, default() {return this.$parent.$options.COL_WIDTH_REDUCE}},
   },
   // components: {},
@@ -39,66 +34,94 @@ export default {
     }
   },
   computed: {
-    cStyle() {
-      const stl = {
-        marginRight: `${this.$parent.gutterX}px`,
-        marginBottom: `${this.$parent.gutterY}px`,
-      }
-      return stl
-    },
-    cBaseStyle() {
-      // base style
+    styleText() {
       let styleText = `.${this.className}{\n`
-      let w = this.width
-      if (this.width == null) {
-        w = this.grow ? '1px' : 1
-      }
-      styleText += `width: ${this.widthText(w)};`
-      if (this.grow != null && this.grow !== false) {
-        let grow = this.grow
-        if (this.grow === true) {
-          grow = 1
+      // margin
+      styleText += `
+        margin-right: ${this.$parent.gutterX}px;
+        margin-bottom: ${this.$parent.gutterY}px;
+      `
+      // base style
+      const widthAndGrow = (w, grow) => {
+        let t = ''
+        if (w != null && w !== false) {
+          t += `width: ${this.widthText(w)};`
         }
-        styleText += `flex-grow: ${grow};`
-      }
-      styleText += '}'
-      return `<style type="text/css">${styleText}</style>`
-    },
-    cResponsiveStyle() {
-      // responsive
-      let styleText = ''
-      const bp = BREAK_POINTS
-      const pointNames = ['xs', 'sm', 'md', 'lg', 'xl'].filter(name => this[name])
-      for (let i = 0; i < pointNames.length; i++) {
-        const conditions = []
-        const pointName = pointNames[i]
-        const prev = pointNames[i - 1]
-        if (prev && BREAK_POINTS[prev]) {
-          conditions.push(`(min-width: ${BREAK_POINTS[prev]}px)`)
-        }
-        if (BREAK_POINTS[pointName]) {
-          conditions.push(`(max-width: ${BREAK_POINTS[pointName]}px)`)
-        }
-        styleText += `
-        @media ${conditions.join(' and ')} {
-          .${this.className}{
-            width: ${this[pointName]};
+        if (grow != null && grow !== false) {
+          if (grow === true) {
+            grow = 1
           }
+          t += `flex-grow: ${grow};`
         }
+        return t
+      }
+      styleText += widthAndGrow(this.width, this.grow)
+      styleText += '}'
+      // responsive
+      const bp = this.$parent.breakPoints
+      const {xs, xsGrow, sm, smGrow, md, mdGrow, lg, lgGrow, xl, xlGrow} = this
+      if (xs !== false || xsGrow !== false) {
+        styleText += `
+          @media (max-width: ${bp.xs}px) {
+            .${this.className}{
+              ${widthAndGrow(xs, xsGrow)}
+            }
+          }
         `
       }
-      return `<style type="text/css">${styleText}</style>`
+      if (sm !== false || smGrow !== false) {
+        styleText += `
+          @media (min-width: ${bp.xs}px) {
+            .${this.className}{
+              ${widthAndGrow(sm, smGrow)}
+            }
+          }
+        `
+      }
+      if (md !== false || mdGrow !== false) {
+        styleText += `
+          @media (min-width: ${bp.sm}px) {
+            .${this.className}{
+              ${widthAndGrow(md, mdGrow)}
+            }
+          }
+        `
+      }
+      if (lg !== false || lgGrow !== false) {
+        styleText += `
+          @media (min-width: ${bp.md}px) {
+            .${this.className}{
+              ${widthAndGrow(lg, lgGrow)}
+            }
+          }
+        `
+      }
+      if (xl !== false || xlGrow !== false) {
+        styleText += `
+          @media (min-width: ${bp.lg}px) {
+            .${this.className}{
+              ${widthAndGrow(xl, xlGrow)}
+            }
+          }
+        `
+      }
+      // 
+      return `<style type="text/css">${styleText}</style>`.replace(/\n/g, '')
     },
   },
   // watch: {},
   methods: {
     // convert width to css text
     widthText(width) {
-      if (width <= 1) {
-        const reduce = ifNeedReduceColWidth ? ` - ${this.colWidthReduce}px` : ''
-        return `calc(100% * ${width} - ${this.$parent.gutterX}px${reduce})`
+      if (hp.isNumber(width)) {
+        if (width <= 1) {
+          const reduce = ifNeedReduceColWidth ? ` - ${this.colWidthReduce}px` : ''
+          return `calc(100% * ${width} - ${this.$parent.gutterX}px${reduce})` 
+        } else {
+          return `${width}px`
+        }
       } else {
-        return `${width}px`
+        return width // such as 100px, 100em, 10cm
       }
     },
   },

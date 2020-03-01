@@ -11,10 +11,13 @@
           .box.red
     Col(:width="0.5")
       .box.red
-    Col(:width="0.2")
-      .box.red
-    Col(:width="0.2")
-      .box.red
+    Col(:width="0.5")
+      .box.yellow
+    Col(:width="0.2" xsGrow)
+      .box.red Grow xs
+    BreakRow(xs)
+    Col(:width="0.2" xsGrow)
+      .box.red Grow xs
     BreakRow
     Col(grow)
       .box.red
@@ -23,6 +26,7 @@
     BreakRow
     Col(grow)
       .box.red
+    BreakRow
     Col
       h2 2
     Col(:width="0.2")
