@@ -12,18 +12,18 @@ import {ifNeedReduceColWidth} from './Row.vue'
 
 export default {
   props: {
-    width: {type: [Boolean, Number, String]},
+    width: {type: [Number, String]}, // default 1; default 1.1 if grow
     grow: {type: [Boolean, Number]},
     // responsive
-    xs: {type: [Boolean, Number, String]},
+    xs: {type: [Number, String]},
     xsGrow: {type: [Boolean, Number]},
-    sm: {type: [Boolean, Number, String]},
+    sm: {type: [Number, String]},
     smGrow: {type: [Boolean, Number]},
-    md: {type: [Boolean, Number, String]},
+    md: {type: [Number, String]},
     mdGrow: {type: [Boolean, Number]},
-    lg: {type: [Boolean, Number, String]},
+    lg: {type: [Number, String]},
     lgGrow: {type: [Boolean, Number]},
-    xl: {type: [Boolean, Number, String]},
+    xl: {type: [Number, String]},
     xlGrow: {type: [Boolean, Number]},
     colWidthReduce: {type: Number, default() {return this.$parent.$options.COL_WIDTH_REDUCE}},
   },
@@ -44,7 +44,7 @@ export default {
       // base style
       const widthAndGrow = (w, grow) => {
         let t = ''
-        if (w != null && w !== false) {
+        if (w != null) {
           t += `width: ${this.widthText(w)};`
         }
         if (grow != null && grow !== false) {
@@ -55,52 +55,61 @@ export default {
         }
         return t
       }
-      styleText += widthAndGrow(this.width, this.grow)
+      let w = this.width
+      if (w == null) {
+        w = this.grow != null && this.grow !== false ? 1.1 : 1
+      }
+      styleText += widthAndGrow(w, this.grow)
       styleText += '}'
       // responsive
       const bp = this.$parent.breakPoints
       const {xs, xsGrow, sm, smGrow, md, mdGrow, lg, lgGrow, xl, xlGrow} = this
-      if (xs !== false || xsGrow !== false) {
+      const xsStyle = widthAndGrow(xs, xsGrow)
+      if (xsStyle) {
         styleText += `
           @media (max-width: ${bp.xs}px) {
             .${this.className}{
-              ${widthAndGrow(xs, xsGrow)}
+              ${xsStyle}
             }
           }
         `
       }
-      if (sm !== false || smGrow !== false) {
+      const smStyle = widthAndGrow(sm, smGrow)
+      if (smStyle) {
         styleText += `
           @media (min-width: ${bp.xs}px) {
             .${this.className}{
-              ${widthAndGrow(sm, smGrow)}
+              ${smStyle}
             }
           }
         `
       }
-      if (md !== false || mdGrow !== false) {
+      const mdStyle = widthAndGrow(md, mdGrow)
+      if (mdStyle) {
         styleText += `
           @media (min-width: ${bp.sm}px) {
             .${this.className}{
-              ${widthAndGrow(md, mdGrow)}
+              ${mdStyle}
             }
           }
         `
       }
-      if (lg !== false || lgGrow !== false) {
+      const lgStyle = widthAndGrow(lg, lgGrow)
+      if (lgStyle) {
         styleText += `
           @media (min-width: ${bp.md}px) {
             .${this.className}{
-              ${widthAndGrow(lg, lgGrow)}
+              ${lgStyle}
             }
           }
         `
       }
-      if (xl !== false || xlGrow !== false) {
+      const xlStyle = widthAndGrow(xl, xlGrow)
+      if (xlStyle) {
         styleText += `
           @media (min-width: ${bp.lg}px) {
             .${this.className}{
-              ${widthAndGrow(xl, xlGrow)}
+              ${xlStyle}
             }
           }
         `

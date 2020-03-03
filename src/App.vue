@@ -1,7 +1,13 @@
 <template lang="pug">
 #app
+  Row(style="background: teal;")
+    Col(:width="1/5" v-for="n in total")
+      .box.red
+  button(@click="total++") add
+  button(@click="total--") reduce
+  hr
   Row
-    Col(:width="1/nn" v-for="n in nn")
+    Col(:width="1/24" v-for="n in 24")
       .box.red
     Col(:width="0.5")
       Row
@@ -82,9 +88,10 @@
       .box.red
     Col(:width="200")
       .box.red
-    Col(grow)
+    Col(:width="2" grow)
       .box.red
-    BreakRow
+    
+
 </template>
 
 <script>
@@ -95,27 +102,14 @@ export default {
   components: {Row, Col, BreakRow},
   data() {
     return {
-      nn: 5,
+      total: 21,
     }
   },
   // computed: {},
   // watch: {},
   // methods: {},
   // created() {},
-  async mounted() {
-    const arr = [];
-    for (let index = 1; index <= 24; index++) {
-      this.nn = index
-      await this.$nextTick()
-      let col1 = this.$el.querySelector('.cr-col')
-      let w1 = col1.getBoundingClientRect().width
-      let w2 = col1.parentElement.getBoundingClientRect().width
-      arr.push((w1+16) *this.nn - w2)
-    }
-    console.log(arr);
-    console.log(Math.min(...arr), Math.max(...arr));
-    
-  },
+  // async mounted() {},
 }
 </script>
 
@@ -130,4 +124,5 @@ export default {
 .yellow{
   background: yellow;
 }
+
 </style>
