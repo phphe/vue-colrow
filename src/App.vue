@@ -1,13 +1,13 @@
 <template lang="pug">
 #app
   Row(style="background: teal;")
-    Col(:width="1/5" v-for="n in total")
+    Col(:width="1/5" v-for="n in total" :key="n")
       .box.red
   button(@click="total++") add
   button(@click="total--") reduce
   hr
   Row
-    Col(:width="1/24" v-for="n in 24")
+    Col(:width="1/24" v-for="n in 24" :key="n")
       .box.red
     Col(:width="0.5")
       Row
@@ -64,7 +64,7 @@
       .box.red
     Col
       hr
-    Col.xxx(v-for="i in 10" :key="i" width="300" grow)
+    Col(v-for="i in 10" :key="i" width="300" grow)
       .box.red
     Col(:width="0.6")
       div
