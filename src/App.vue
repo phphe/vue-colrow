@@ -1,13 +1,13 @@
 <template lang="pug">
 #app
-  Row(style="background: teal;")
-    Col(:width="1/5" v-for="n in total" :key="n")
+  Row(style="background: teal;" :smGutterX="5" :xlGutterX="16" :smGutterY="5" :xlGutterY="16")
+    Col(:width="1/5" v-for="n in total" :key="n+10")
       .box.red
   button(@click="total++") add
   button(@click="total--") reduce
   hr
   Row
-    Col(:width="1/24" v-for="n in 24" :key="n")
+    Col(:width="1/24" v-for="n in 24" :key="n+100")
       .box.red
     Col(:width="0.5")
       Row

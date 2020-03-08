@@ -2,8 +2,7 @@
 .cr-col(:class="className")
   slot
   //- style sheet
-  .cr-dynamic-style(style="display:none;")
-    div(v-html="styleText")
+  .cr-dynamic-style(style="display:none;" v-html="styleText")
 </template>
 
 <script>
@@ -35,82 +34,76 @@ export default {
   },
   computed: {
     styleText() {
-      let styleText = `.${this.className}{\n`
-      // margin
-      styleText += `
-        margin-right: ${this.$parent.gutterX}px;
-        margin-bottom: ${this.$parent.gutterY}px;
-      `
-      // base style
-      const widthAndGrow = (w, grow) => {
-        let t = ''
-        if (w != null) {
-          t += `width: ${this.widthText(w)};`
+      const baseStyleText = (width, grow, gutterX, gutterY) => {
+        let empty = true
+        const styles = []
+        if (gutterX != null) {
+          styles.push(`margin-right: ${gutterX}px;`)
+          empty = false
+        }
+        if (gutterY != null) {
+          styles.push(`margin-bottom: ${gutterY}px;`)
+          empty = false
+        }
+        if (width != null || gutterX != null) {
+          styles.push(`width: ${this.widthText(width, gutterX)};`)
+          empty = false
         }
         if (grow != null && grow !== false) {
           if (grow === true) {
             grow = 1
           }
-          t += `flex-grow: ${grow};`
+          styles.push(`flex-grow: ${grow};`)
+          empty = false
         }
-        return t
+        const style = `.${this.className}{${styles.join('')}}`
+        return {empty, style}
       }
-      let w = this.width
-      if (w == null) {
-        w = this.grow != null && this.grow !== false ? 1.1 : 1
-      }
-      styleText += widthAndGrow(w, this.grow)
-      styleText += '}'
+
+      let styleText = ``
+      styleText += baseStyleText(this.width, this.grow, this.$parent.gutterX, this.$parent.gutterY).style
       // responsive
       const bp = this.$parent.breakPoints
       const {xs, xsGrow, sm, smGrow, md, mdGrow, lg, lgGrow, xl, xlGrow} = this
-      const xsStyle = widthAndGrow(xs, xsGrow)
-      if (xsStyle) {
+      const {xsGutterX, xsGutterY, smGutterX, smGutterY, mdGutterX, mdGutterY, lgGutterX, lgGutterY, xlGutterX, xlGutterY} = this.$parent
+      let t
+      t = baseStyleText(xs, xsGrow, xsGutterX, xsGutterY)
+      if (!t.empty) {
         styleText += `
           @media (max-width: ${bp.xs}px) {
-            .${this.className}{
-              ${xsStyle}
-            }
+            ${t.style}
           }
         `
       }
-      const smStyle = widthAndGrow(sm, smGrow)
-      if (smStyle) {
+      t = baseStyleText(sm, smGrow, smGutterX, smGutterY)
+      if (!t.empty) {
         styleText += `
           @media (min-width: ${bp.xs}px) {
-            .${this.className}{
-              ${smStyle}
-            }
+            ${t.style}
           }
         `
       }
-      const mdStyle = widthAndGrow(md, mdGrow)
-      if (mdStyle) {
+      t = baseStyleText(md, mdGrow, mdGutterX, mdGutterY)
+      if (!t.empty) {
         styleText += `
           @media (min-width: ${bp.sm}px) {
-            .${this.className}{
-              ${mdStyle}
-            }
+            ${t.style}
           }
         `
       }
-      const lgStyle = widthAndGrow(lg, lgGrow)
-      if (lgStyle) {
+      t = baseStyleText(lg, lgGrow, lgGutterX, lgGutterY)
+      if (!t.empty) {
         styleText += `
           @media (min-width: ${bp.md}px) {
-            .${this.className}{
-              ${lgStyle}
-            }
+            ${t.style}
           }
         `
       }
-      const xlStyle = widthAndGrow(xl, xlGrow)
-      if (xlStyle) {
+      t = baseStyleText(xl, xlGrow, xlGutterX, xlGutterY)
+      if (!t.empty) {
         styleText += `
           @media (min-width: ${bp.lg}px) {
-            .${this.className}{
-              ${xlStyle}
-            }
+            ${t.style}
           }
         `
       }
@@ -121,11 +114,17 @@ export default {
   // watch: {},
   methods: {
     // convert width to css text
-    widthText(width) {
+    widthText(width, gutterX) {
+      if (width == null) {
+        width = this.width
+      }
+      if (gutterX == null) {
+        gutterX = this.$parent.gutterX
+      }
       if (hp.isNumber(width)) {
         if (width <= 1) {
           const reduce = ifNeedReduceColWidth ? ` - ${this.colWidthReduce}px` : ''
-          return `calc(100% * ${width} - ${this.$parent.gutterX}px${reduce})` 
+          return `calc(100% * ${width} - ${gutterX}px${reduce})` 
         } else {
           return `${width}px`
         }

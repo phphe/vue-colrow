@@ -1,7 +1,8 @@
 <template lang="pug">
-.cr-row(:style="style")
-  .cr-row-inner(:style="innerStyle" ref="inner")
+.cr-row(:class="className")
+  .cr-row-inner(ref="inner")
     slot
+  .cr-dynamic-style(style="display:none;" v-html="styleText")
 </template>
 
 <script>
@@ -38,12 +39,23 @@ export default {
     heightCalculation: {type: Boolean, default() { return config.ROW_HEIGHT_CALCULATION }},
     // responsive
     breakPoints: {type: Object, default() {return config.BREAK_POINTS}},
+    xsGutterX: {type: Number},
+    xsGutterY: {type: Number},
+    smGutterX: {type: Number},
+    smGutterY: {type: Number},
+    mdGutterX: {type: Number},
+    mdGutterY: {type: Number},
+    lgGutterX: {type: Number},
+    lgGutterY: {type: Number},
+    xlGutterX: {type: Number},
+    xlGutterY: {type: Number},
   },
   // components: {},
   data() {
     return {
       gutterX: null,
       gutterY: null,
+      className: `cr-row-${this._uid}`,
       innerHeight: null,
       updateInnerHeight: () => {
         const {inner} = this.$refs
@@ -57,22 +69,48 @@ export default {
     }
   },
   computed: {
-    style() {
-      const stl = {
-        marginRight: `-${this.gutterX}px`,
-        // marginBottom: `-${this.gutterY}px`,
+    styleText() {
+      const baseStyleText = (gutterX, gutterY) => {
+        if (gutterX == null) {
+          gutterX = this.gutterX
+        }
+        if (gutterY == null) {
+          gutterY = this.gutterY
+        }
+        let styleText = `.${this.className}{\n`
+        styleText += `margin-right: -${gutterX}px;`
+        if (this.innerHeight == null) {
+          styleText += `margin-bottom: -${gutterY}px;`
+        } else if(this.innerHeight !== 0) {
+          styleText += `height: ${this.innerHeight - gutterY}px;`
+        }
+        styleText += `}`
+        styleText += `.${this.className} > .cr-row-inner{
+          width: calc(100% + ${gutterX}px);
+        }`
+        return styleText
       }
-      if (this.innerHeight == null) {
-        stl.marginBottom = `-${this.gutterY}px`
-      } else if(this.innerHeight !== 0) {
-        stl.height = `${this.innerHeight - this.gutterY}px`
+      let styleText = baseStyleText(this.gutterX, this.gutterY)
+      // responsive
+      const bp = this.breakPoints
+      const {xsGutterX, xsGutterY, smGutterX, smGutterY, mdGutterX, mdGutterY, lgGutterX, lgGutterY, xlGutterX, xlGutterY} = this
+      if (xsGutterX != null || xsGutterY != null) {
+        styleText += `@media (max-width: ${bp.xs}px) {${baseStyleText(xsGutterX, xsGutterY)}}`
       }
-      return stl
-    },
-    innerStyle() {
-      return {
-        width: `calc(100% + ${this.gutterX}px)`,
+      if (smGutterX != null || smGutterY != null) {
+        styleText += `@media (min-width: ${bp.xs}px) {${baseStyleText(smGutterX, smGutterY)}}`
       }
+      if (mdGutterX != null || mdGutterY != null) {
+        styleText += `@media (min-width: ${bp.sm}px) {${baseStyleText(mdGutterX, mdGutterY)}}`
+      }
+      if (lgGutterX != null || lgGutterY != null) {
+        styleText += `@media (min-width: ${bp.md}px) {${baseStyleText(lgGutterX, lgGutterY)}}`
+      }
+      if (xlGutterX != null || xlGutterY != null) {
+        styleText += `@media (min-width: ${bp.lg}px) {${baseStyleText(xlGutterX, xlGutterY)}}`
+      }
+      // 
+      return `<style type="text/css">${styleText}</style>`.replace(/\n/g, '')
     },
   },
   watch: {
