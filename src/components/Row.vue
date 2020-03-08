@@ -1,44 +1,31 @@
 <template lang="pug">
-.cr-row(:style="cStyle")
-  .cr-row-inner(:style="cInnerStyle" ref="inner")
+.cr-row(:style="style")
+  .cr-row-inner(:style="innerStyle" ref="inner")
     slot
 </template>
 
 <script>
 import * as hp from 'helper-js'
+import detectIfNeedReduceColWidth from './detectIfNeedReduceColWidth'
 
-// detect if need reduce col width
-// detect browsers, from: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
-function isNode() {
-  return typeof module !== 'undefined' && module.exports
-}
-function isFirefox() {
-  return typeof InstallTrigger !== 'undefined'
-}
-// Safari 3.0+ "[object HTMLElementConstructor]" 
-function isSafari() {
-  return /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification))
-}
-// Chrome 1 - 79
-function isChrome() {
-  return !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)
-}
+export const ifNeedReduceColWidth = detectIfNeedReduceColWidth()
 
-// detect by DOM
-// const div = document.createElement('div')
-// document.body.appendChild(div)
-// div.style.width='calc(1000px / 7)'
-// const w = hp.getBoundingClientRect(div).width
-// if (w * 7 > 1000) {
-//   _ifNeedReduceColWidth = true
-// }
-// hp.removeEl(div)
-
-export const ifNeedReduceColWidth = Boolean(!isNode() && !isChrome() && !isSafari() && !isFirefox())
+export const config = {
+  DEFAULT_GUTTER_X: 16,
+  DEFAULT_GUTTER_Y: 16,
+  COL_WIDTH_REDUCE: 0.09, // for some browsers
+  BREAK_POINTS: {
+    xs: 544,
+    sm: 768,
+    md: 992,
+    lg: 1200,
+  },
+  ROW_HEIGHT_CALCULATION: true,
+}
 
 export default {
   DEFAULT_GUTTER: 16,
-  COL_WIDTH_REDUCE: 0.09, // only for non-webkit browsers
+  COL_WIDTH_REDUCE: 0.09, // for some browsers
   BREAK_POINTS: {
     xs: 544,
     sm: 768,
@@ -47,10 +34,10 @@ export default {
   },
   ROW_HEIGHT_CALCULATION: true,
   props: {
-    gutter: {default() { return this.$options.DEFAULT_GUTTER }, type: [Number, Array]},
-    heightCalculation: {type: Boolean, default() { return this.$options.ROW_HEIGHT_CALCULATION }},
+    gutter: {default() { return [config.DEFAULT_GUTTER_X, config.DEFAULT_GUTTER_Y] }, type: [Number, Array]},
+    heightCalculation: {type: Boolean, default() { return config.ROW_HEIGHT_CALCULATION }},
     // responsive
-    breakPoints: {type: Object, default() {return this.$options.BREAK_POINTS}},
+    breakPoints: {type: Object, default() {return config.BREAK_POINTS}},
   },
   // components: {},
   data() {
@@ -70,7 +57,7 @@ export default {
     }
   },
   computed: {
-    cStyle() {
+    style() {
       const stl = {
         marginRight: `-${this.gutterX}px`,
         // marginBottom: `-${this.gutterY}px`,
@@ -82,7 +69,7 @@ export default {
       }
       return stl
     },
-    cInnerStyle() {
+    innerStyle() {
       return {
         width: `calc(100% + ${this.gutterX}px)`,
       }
@@ -95,10 +82,10 @@ export default {
       handler(gutter) {
         let t = hp.isArray(gutter) ? gutter : [gutter, gutter]
         if (t[0] == null) {
-          t[0] = this.$options.DEFAULT_GUTTER
+          t[0] = config.DEFAULT_GUTTER_X
         }
         if (t[1] == null) {
-          t[1] = this.$options.DEFAULT_GUTTER
+          t[1] = config.DEFAULT_GUTTER_Y
         }
         this.gutterX = t[0]
         this.gutterY = t[1]

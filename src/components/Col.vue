@@ -8,7 +8,7 @@
 
 <script>
 import * as hp from 'helper-js'
-import {ifNeedReduceColWidth} from './Row.vue'
+import {ifNeedReduceColWidth, config} from './Row.vue'
 
 export default {
   props: {
@@ -25,7 +25,7 @@ export default {
     lgGrow: {type: [Boolean, Number]},
     xl: {type: [Number, String]},
     xlGrow: {type: [Boolean, Number]},
-    colWidthReduce: {type: Number, default() {return this.$parent.$options.COL_WIDTH_REDUCE}},
+    colWidthReduce: {type: Number, default() {return config.COL_WIDTH_REDUCE}},
   },
   // components: {},
   data() {
