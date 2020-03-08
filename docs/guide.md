@@ -17,8 +17,7 @@ Vue.component('BreakRow', BreakRow)
 // set global config. default horizontal gutter(column spacing)
 config.DEFAULT_GUTTER_X = 20
 ```
-Row是行组件, Col是列组件, BreakRow是断行组件. config是[全局配置对象](api.md#config), 可以修改它的属性. Col, BreakRow必须放在Row里面, Row的直接子级只能是Col和BreakRow. Col的直接子级是你的自定义内容, 可以是Row. 嵌套的Row相互独立, 不会互相通信.
-BreakRow is row breaking component. Config is a [global configuration object] (api.md#config), and its properties can be modified. Col, BreakRow must be placed in Row, a direct child of Row Can only be Col and BreakRow. The direct children of Col are your custom content, which can be Row. Nested Rows are independent of each other and do not communicate with each other.
+BreakRow is row breaking component. Config is a [global configuration object](api.md#config), and its properties can be modified. Col, BreakRow must be placed in Row, a direct child of Row Can only be Col and BreakRow. The direct children of Col are your custom content, which can be Row. Nested Rows are independent of each other and do not communicate with each other.
 ```html
 <Row>
   <Col>your content</Col>
