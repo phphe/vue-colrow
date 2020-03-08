@@ -45,6 +45,9 @@ export default {
           styles.push(`margin-bottom: ${gutterY}px;`)
           empty = false
         }
+        if (width == null && grow) {
+          width = 2
+        }
         if (width != null || gutterX != null) {
           styles.push(`width: ${this.widthText(width, gutterX)};`)
           empty = false
@@ -61,7 +64,11 @@ export default {
       }
 
       let styleText = ``
-      styleText += baseStyleText(this.width, this.grow, this.$parent.gutterX, this.$parent.gutterY).style
+      let w = this.width
+      if (w == null && !this.grow) {
+        w = 1
+      }
+      styleText += baseStyleText(w, this.grow, this.$parent.gutterX, this.$parent.gutterY).style
       // responsive
       const bp = this.$parent.breakPoints
       const {xs, xsGrow, sm, smGrow, md, mdGrow, lg, lgGrow, xl, xlGrow} = this
