@@ -37,7 +37,8 @@
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
     "vue": "^2.6.10",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "vuetify": "^2.2.15"
   },
   "license": "MIT"
 }
