@@ -7,7 +7,7 @@ It includes 3 components: Row, Col, BreakRow. Follow is a demo with Vuetify:
 
 ![image](https://github.com/phphe/vue-colrow/blob/master/public/colrow-form.png?raw=true)
 
-In small screen: ![image](https://github.com/phphe/vue-colrow/blob/master/public/colrow-form.png?raw=true)
+In small screen: ![image](https://github.com/phphe/vue-colrow/blob/master/public/colrow-form-xs.png?raw=true)
 
 It is easy:
 ```html
