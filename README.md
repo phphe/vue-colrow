@@ -38,7 +38,7 @@ It is easy:
 </Row>
 ```
 ## Demo 2: Responsive card list with gutter
-![image](https://github.com/phphe/vue-colrow/blob/master/public/colrow-list?raw=true)
+![image](https://github.com/phphe/vue-colrow/blob/master/public/colrow-list.png?raw=true)
 ```html
 <Row>
   <Col :xl="1/5" :lg="1/4" :md="1/3" :sm="1/2" :xs="1" v-for="i in 23" :key="i+'card'"><Card1 /></Col>
