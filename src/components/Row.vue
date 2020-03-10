@@ -60,7 +60,7 @@ export default {
       updateInnerHeight: () => {
         const {inner} = this.$refs
         if (inner) {
-          const h = inner.offsetHeight
+          const h = hp.getBoundingClientRect(inner).height
           if (h !== this.innerHeight) {
             this.innerHeight = h
           } 
