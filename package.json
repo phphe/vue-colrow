@@ -1,6 +1,6 @@
 {
   "name": "vue-colrow",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Smarter vue layout components. Based on css flexbox. Support responsive design, server side render.",
   "main": "dist/vue-colrow.cjs.js",
   "module": "dist/vue-colrow.esm.js",
@@ -27,16 +27,6 @@
     "@babel/runtime": "^7.7.7",
     "helper-js": "^1.4.33",
     "vue-runtime-helpers": "^1.1.2"
-  },
-  "browserslist": {
-    "production": [
-      "defaults"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",

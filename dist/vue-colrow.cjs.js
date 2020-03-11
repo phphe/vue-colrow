@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v2.0.1
+ * vue-colrow v2.0.2
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
@@ -136,9 +136,7 @@ var script = {
       className: `cr-row-${this._uid}`,
       innerHeight: null,
       updateInnerHeight: () => {
-        const {
-          inner
-        } = this.$refs;
+        const inner = this.$refs.inner;
 
         if (inner) {
           const h = hp.getBoundingClientRect(inner).height;
@@ -181,18 +179,16 @@ var script = {
       let styleText = baseStyleText(this.gutterX, this.gutterY); // responsive
 
       const bp = this.breakPoints;
-      const {
-        xsGutterX,
-        xsGutterY,
-        smGutterX,
-        smGutterY,
-        mdGutterX,
-        mdGutterY,
-        lgGutterX,
-        lgGutterY,
-        xlGutterX,
-        xlGutterY
-      } = this;
+      const xsGutterX = this.xsGutterX,
+            xsGutterY = this.xsGutterY,
+            smGutterX = this.smGutterX,
+            smGutterY = this.smGutterY,
+            mdGutterX = this.mdGutterX,
+            mdGutterY = this.mdGutterY,
+            lgGutterX = this.lgGutterX,
+            lgGutterY = this.lgGutterY,
+            xlGutterX = this.xlGutterX,
+            xlGutterY = this.xlGutterY;
 
       if (xsGutterX != null || xsGutterY != null) {
         styleText += `@media (max-width: ${bp.xs}px) {${baseStyleText(xsGutterX, xsGutterY)}}`;
@@ -289,7 +285,7 @@ var script = {
 const __vue_script__ = script;
 /* template */
 
-var __vue_render__ = function () {
+var __vue_render__ = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -447,30 +443,27 @@ var script$1 = {
       styleText += baseStyleText(w, this.grow, this.$parent.gutterX, this.$parent.gutterY).style; // responsive
 
       const bp = this.$parent.breakPoints;
-      const {
-        xs,
-        xsGrow,
-        sm,
-        smGrow,
-        md,
-        mdGrow,
-        lg,
-        lgGrow,
-        xl,
-        xlGrow
-      } = this;
-      const {
-        xsGutterX,
-        xsGutterY,
-        smGutterX,
-        smGutterY,
-        mdGutterX,
-        mdGutterY,
-        lgGutterX,
-        lgGutterY,
-        xlGutterX,
-        xlGutterY
-      } = this.$parent;
+      const xs = this.xs,
+            xsGrow = this.xsGrow,
+            sm = this.sm,
+            smGrow = this.smGrow,
+            md = this.md,
+            mdGrow = this.mdGrow,
+            lg = this.lg,
+            lgGrow = this.lgGrow,
+            xl = this.xl,
+            xlGrow = this.xlGrow;
+      const _this$$parent = this.$parent,
+            xsGutterX = _this$$parent.xsGutterX,
+            xsGutterY = _this$$parent.xsGutterY,
+            smGutterX = _this$$parent.smGutterX,
+            smGutterY = _this$$parent.smGutterY,
+            mdGutterX = _this$$parent.mdGutterX,
+            mdGutterY = _this$$parent.mdGutterY,
+            lgGutterX = _this$$parent.lgGutterX,
+            lgGutterY = _this$$parent.lgGutterY,
+            xlGutterX = _this$$parent.xlGutterX,
+            xlGutterY = _this$$parent.xlGutterY;
       let t;
       t = baseStyleText(xs, xsGrow, xsGutterX, xsGutterY);
 
@@ -561,7 +554,7 @@ var script$1 = {
 const __vue_script__$1 = script$1;
 /* template */
 
-var __vue_render__$1 = function () {
+var __vue_render__$1 = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -635,13 +628,11 @@ var script$2 = {
 
   computed: {
     styleText() {
-      const {
-        xs,
-        sm,
-        md,
-        lg,
-        xl
-      } = this;
+      const xs = this.xs,
+            sm = this.sm,
+            md = this.md,
+            lg = this.lg,
+            xl = this.xl;
 
       if (xs || sm || md || lg || xl) {
         let styleText = `.${this.className}{display: none;}`;
@@ -698,7 +689,7 @@ var script$2 = {
 const __vue_script__$2 = script$2;
 /* template */
 
-var __vue_render__$2 = function () {
+var __vue_render__$2 = function __vue_render__() {
   var _vm = this;
 
   var _h = _vm.$createElement;

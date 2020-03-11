@@ -37,17 +37,20 @@ const getBabelConfig = () => ({
 const esmBabelConfig = getBabelConfig();
 esmBabelConfig.presets[0][1]['targets'] = { esmodules: true };
 const cjsBabelConfig = getBabelConfig();
+cjsBabelConfig.presets[0][1]['targets'] = { node: 6 };
 cjsBabelConfig.plugins.push(['module-extension', { mjs: 'js' }]); // replace .mjs to .js
 const umdBabelConfig = getBabelConfig();
+umdBabelConfig.presets[0][1]['targets'] = 'defaults'; // default browsers, coverage 90%
 exports.default = [
     // esm
     {
         input,
         external: (source) => rogo_1.belongsTo(source, Object.keys(pkg.dependencies || {})) || rogo_1.belongsTo(source, Object.keys(pkg.peerDependencies || {})),
         plugins: [
+            vue({ css: false }),
             postcss({ extract: extractCssPath }),
-            node(), cjs(), json(), vue({ css: false }),
             babel(esmBabelConfig),
+            node(), cjs(), json(),
         ],
         output: {
             file: path.resolve(outDir, `${outputName}.esm.js`),
@@ -61,9 +64,10 @@ exports.default = [
         input,
         external: (source) => rogo_1.belongsTo(source, Object.keys(pkg.dependencies || {})) || rogo_1.belongsTo(source, Object.keys(pkg.peerDependencies || {})),
         plugins: [
+            vue({ css: false }),
             postcss({ extract: extractCssPath }),
-            node(), cjs(), json(), vue({ css: false }),
             babel(cjsBabelConfig),
+            node(), cjs(), json(),
         ],
         output: {
             file: path.resolve(outDir, `${outputName}.cjs.js`),
@@ -77,9 +81,10 @@ exports.default = [
         input,
         external: (source) => rogo_1.belongsTo(source, Object.keys(pkg.peerDependencies || {})),
         plugins: [
+            vue({ css: false }),
             postcss({ extract: extractCssPath }),
-            node(), cjs(), json(), vue({ css: false }),
             babel(umdBabelConfig),
+            node(), cjs(), json(),
         ],
         output: {
             file: path.resolve(outDir, `${outputName}.js`),
@@ -94,10 +99,11 @@ exports.default = [
         input,
         external: (source) => rogo_1.belongsTo(source, Object.keys(pkg.peerDependencies || {})),
         plugins: [
+            vue({ css: false }),
             postcss({ extract: extractCssPath }),
-            node(), cjs(), json(), vue({ css: false }),
-            rollup_plugin_terser_1.terser(),
             babel(umdBabelConfig),
+            node(), cjs(), json(),
+            rollup_plugin_terser_1.terser(),
         ],
         output: {
             file: path.resolve(outDir, `${outputName}.min.js`),
