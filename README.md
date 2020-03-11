@@ -1,7 +1,7 @@
 # vue-colrow
-Smarter layout components. Based on css flexbox. Support responsive design, server side render. 5 KB gzipped. [Document](https://vue-colrow.phphe.com)
+Smarter layout components. Based on css flexbox. Support responsive design, server side render. 3 KB gzipped. [Document](https://vue-colrow.phphe.com). It also has a React + Typescript version: [react-colrow](https://github.com/phphe/react-colrow)
 
-更智能的布局组件. 基于css flexbox. 支持响应式布局, 服务端渲染. 5 KB gzipped. [文档](https://vue-colrow.phphe.com/zh)
+更智能的布局组件. 基于css flexbox. 支持响应式布局, 服务端渲染. 5 KB gzipped. [文档](https://vue-colrow.phphe.com/zh). 还有React + Typescript的版本: [react-colrow](https://github.com/phphe/react-colrow)
 
 It includes 3 components: Row, Col, BreakRow. Follow is a demo with Vuetify:
 

@@ -1,9 +1,9 @@
 /*!
- * vue-colrow v2.0.0
+ * vue-colrow v2.0.1
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
-import { isArray, onDOM, offDOM, isNumber } from 'helper-js';
+import { getBoundingClientRect, isArray, onDOM, offDOM, isNumber } from 'helper-js';
 import __vue_normalize__ from 'vue-runtime-helpers/dist/normalize-component.mjs';
 
 // detect if need reduce col width
@@ -135,7 +135,7 @@ var script = {
         } = this.$refs;
 
         if (inner) {
-          var h = inner.offsetHeight;
+          var h = getBoundingClientRect(inner).height;
 
           if (h !== this.innerHeight) {
             this.innerHeight = h;

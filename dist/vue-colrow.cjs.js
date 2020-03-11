@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v2.0.0
+ * vue-colrow v2.0.1
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Released under the MIT License.
  */
@@ -46,8 +46,8 @@ function isChrome() {
 var detectIfNeedReduceColWidth = (() => Boolean(!isNode() && !isChrome() && !isSafari() && !isFirefox()));
 
 //
-var ifNeedReduceColWidth = detectIfNeedReduceColWidth();
-var config = {
+const ifNeedReduceColWidth = detectIfNeedReduceColWidth();
+const config = {
   DEFAULT_GUTTER_X: 16,
   DEFAULT_GUTTER_Y: 16,
   COL_WIDTH_REDUCE: 0.09,
@@ -133,15 +133,15 @@ var script = {
     return {
       gutterX: null,
       gutterY: null,
-      className: "cr-row-".concat(this._uid),
+      className: `cr-row-${this._uid}`,
       innerHeight: null,
       updateInnerHeight: () => {
-        var {
+        const {
           inner
         } = this.$refs;
 
         if (inner) {
-          var h = inner.offsetHeight;
+          const h = hp.getBoundingClientRect(inner).height;
 
           if (h !== this.innerHeight) {
             this.innerHeight = h;
@@ -153,7 +153,7 @@ var script = {
 
   computed: {
     styleText() {
-      var baseStyleText = (gutterX, gutterY) => {
+      const baseStyleText = (gutterX, gutterY) => {
         if (gutterX == null) {
           gutterX = this.gutterX;
         }
@@ -162,24 +162,26 @@ var script = {
           gutterY = this.gutterY;
         }
 
-        var styleText = ".".concat(this.className, "{\n");
-        styleText += "margin-right: -".concat(gutterX, "px;");
+        let styleText = `.${this.className}{\n`;
+        styleText += `margin-right: -${gutterX}px;`;
 
         if (this.innerHeight == null) {
-          styleText += "margin-bottom: -".concat(gutterY, "px;");
+          styleText += `margin-bottom: -${gutterY}px;`;
         } else if (this.innerHeight !== 0) {
-          styleText += "height: ".concat(this.innerHeight - gutterY, "px;");
+          styleText += `height: ${this.innerHeight - gutterY}px;`;
         }
 
-        styleText += "}";
-        styleText += ".".concat(this.className, " > .cr-row-inner{\n          width: calc(100% + ").concat(gutterX, "px);\n        }");
+        styleText += `}`;
+        styleText += `.${this.className} > .cr-row-inner{
+          width: calc(100% + ${gutterX}px);
+        }`;
         return styleText;
       };
 
-      var styleText = baseStyleText(this.gutterX, this.gutterY); // responsive
+      let styleText = baseStyleText(this.gutterX, this.gutterY); // responsive
 
-      var bp = this.breakPoints;
-      var {
+      const bp = this.breakPoints;
+      const {
         xsGutterX,
         xsGutterY,
         smGutterX,
@@ -193,27 +195,27 @@ var script = {
       } = this;
 
       if (xsGutterX != null || xsGutterY != null) {
-        styleText += "@media (max-width: ".concat(bp.xs, "px) {").concat(baseStyleText(xsGutterX, xsGutterY), "}");
+        styleText += `@media (max-width: ${bp.xs}px) {${baseStyleText(xsGutterX, xsGutterY)}}`;
       }
 
       if (smGutterX != null || smGutterY != null) {
-        styleText += "@media (min-width: ".concat(bp.xs, "px) {").concat(baseStyleText(smGutterX, smGutterY), "}");
+        styleText += `@media (min-width: ${bp.xs}px) {${baseStyleText(smGutterX, smGutterY)}}`;
       }
 
       if (mdGutterX != null || mdGutterY != null) {
-        styleText += "@media (min-width: ".concat(bp.sm, "px) {").concat(baseStyleText(mdGutterX, mdGutterY), "}");
+        styleText += `@media (min-width: ${bp.sm}px) {${baseStyleText(mdGutterX, mdGutterY)}}`;
       }
 
       if (lgGutterX != null || lgGutterY != null) {
-        styleText += "@media (min-width: ".concat(bp.md, "px) {").concat(baseStyleText(lgGutterX, lgGutterY), "}");
+        styleText += `@media (min-width: ${bp.md}px) {${baseStyleText(lgGutterX, lgGutterY)}}`;
       }
 
       if (xlGutterX != null || xlGutterY != null) {
-        styleText += "@media (min-width: ".concat(bp.lg, "px) {").concat(baseStyleText(xlGutterX, xlGutterY), "}");
+        styleText += `@media (min-width: ${bp.lg}px) {${baseStyleText(xlGutterX, xlGutterY)}}`;
       } // 
 
 
-      return "<style type=\"text/css\">".concat(styleText, "</style>").replace(/\n/g, '');
+      return `<style type="text/css">${styleText}</style>`.replace(/\n/g, '');
     }
 
   },
@@ -223,7 +225,7 @@ var script = {
       deep: true,
 
       handler(gutter) {
-        var t = hp.isArray(gutter) ? gutter : [gutter, gutter];
+        let t = hp.isArray(gutter) ? gutter : [gutter, gutter];
 
         if (t[0] == null) {
           t[0] = config.DEFAULT_GUTTER_X;
@@ -249,22 +251,22 @@ var script = {
 
       if (window.MutationObserver && !this._heightCalculation_observer) {
         // Select the node that will be observed for mutations
-        var targetNode = document.body.parentElement; // Options for the observer (which mutations to observe)
+        const targetNode = document.body.parentElement; // Options for the observer (which mutations to observe)
 
-        var _config = {
+        const config = {
           attributes: true,
           childList: true,
           subtree: true
         }; // Callback function to execute when mutations are observed
 
-        var callback = (mutationsList, observer) => {
+        const callback = (mutationsList, observer) => {
           this.updateInnerHeight();
         }; // Create an observer instance linked to the callback function
 
 
-        var observer = new MutationObserver(callback); // Start observing the target node for configured mutations
+        const observer = new MutationObserver(callback); // Start observing the target node for configured mutations
 
-        observer.observe(targetNode, _config);
+        observer.observe(targetNode, config);
         this._heightCalculation_observer = observer;
       }
     }
@@ -274,7 +276,7 @@ var script = {
     hp.offDOM(window, 'resize', this.updateInnerHeight);
 
     if (this._heightCalculation_observer) {
-      var observer = this._heightCalculation_observer;
+      const observer = this._heightCalculation_observer;
       this._heightCalculation_observer = null; // Later, you can stop observing
 
       observer.disconnect();
@@ -284,10 +286,10 @@ var script = {
 };
 
 /* script */
-var __vue_script__ = script;
+const __vue_script__ = script;
 /* template */
 
-var __vue_render__ = function __vue_render__() {
+var __vue_render__ = function () {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -315,23 +317,23 @@ var __vue_staticRenderFns__ = [];
 __vue_render__._withStripped = true;
 /* style */
 
-var __vue_inject_styles__ = undefined;
+const __vue_inject_styles__ = undefined;
 /* scoped */
 
-var __vue_scope_id__ = undefined;
+const __vue_scope_id__ = undefined;
 /* module identifier */
 
-var __vue_module_identifier__ = undefined;
+const __vue_module_identifier__ = undefined;
 /* functional template */
 
-var __vue_is_functional_template__ = false;
+const __vue_is_functional_template__ = false;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__ = __vue_normalize__({
+const __vue_component__ = __vue_normalize__({
   render: __vue_render__,
   staticRenderFns: __vue_staticRenderFns__
 }, __vue_inject_styles__, __vue_script__, __vue_scope_id__, __vue_is_functional_template__, __vue_module_identifier__, false, undefined, undefined, undefined);
@@ -390,23 +392,23 @@ var script$1 = {
   // components: {},
   data() {
     return {
-      className: "cr-col-".concat(this._uid)
+      className: `cr-col-${this._uid}`
     };
   },
 
   computed: {
     styleText() {
-      var baseStyleText = (width, grow, gutterX, gutterY) => {
-        var empty = true;
-        var styles = [];
+      const baseStyleText = (width, grow, gutterX, gutterY) => {
+        let empty = true;
+        const styles = [];
 
         if (gutterX != null) {
-          styles.push("margin-right: ".concat(gutterX, "px;"));
+          styles.push(`margin-right: ${gutterX}px;`);
           empty = false;
         }
 
         if (gutterY != null) {
-          styles.push("margin-bottom: ".concat(gutterY, "px;"));
+          styles.push(`margin-bottom: ${gutterY}px;`);
           empty = false;
         }
 
@@ -415,7 +417,7 @@ var script$1 = {
         }
 
         if (width != null || gutterX != null) {
-          styles.push("width: ".concat(this.widthText(width, gutterX), ";"));
+          styles.push(`width: ${this.widthText(width, gutterX)};`);
           empty = false;
         }
 
@@ -424,19 +426,19 @@ var script$1 = {
             grow = 1;
           }
 
-          styles.push("flex-grow: ".concat(grow, ";"));
+          styles.push(`flex-grow: ${grow};`);
           empty = false;
         }
 
-        var style = ".".concat(this.className, "{").concat(styles.join(''), "}");
+        const style = `.${this.className}{${styles.join('')}}`;
         return {
           empty,
           style
         };
       };
 
-      var styleText = "";
-      var w = this.width;
+      let styleText = ``;
+      let w = this.width;
 
       if (w == null && !this.grow) {
         w = 1;
@@ -444,8 +446,8 @@ var script$1 = {
 
       styleText += baseStyleText(w, this.grow, this.$parent.gutterX, this.$parent.gutterY).style; // responsive
 
-      var bp = this.$parent.breakPoints;
-      var {
+      const bp = this.$parent.breakPoints;
+      const {
         xs,
         xsGrow,
         sm,
@@ -457,7 +459,7 @@ var script$1 = {
         xl,
         xlGrow
       } = this;
-      var {
+      const {
         xsGutterX,
         xsGutterY,
         smGutterX,
@@ -469,39 +471,59 @@ var script$1 = {
         xlGutterX,
         xlGutterY
       } = this.$parent;
-      var t;
+      let t;
       t = baseStyleText(xs, xsGrow, xsGutterX, xsGutterY);
 
       if (!t.empty) {
-        styleText += "\n          @media (max-width: ".concat(bp.xs, "px) {\n            ").concat(t.style, "\n          }\n        ");
+        styleText += `
+          @media (max-width: ${bp.xs}px) {
+            ${t.style}
+          }
+        `;
       }
 
       t = baseStyleText(sm, smGrow, smGutterX, smGutterY);
 
       if (!t.empty) {
-        styleText += "\n          @media (min-width: ".concat(bp.xs, "px) {\n            ").concat(t.style, "\n          }\n        ");
+        styleText += `
+          @media (min-width: ${bp.xs}px) {
+            ${t.style}
+          }
+        `;
       }
 
       t = baseStyleText(md, mdGrow, mdGutterX, mdGutterY);
 
       if (!t.empty) {
-        styleText += "\n          @media (min-width: ".concat(bp.sm, "px) {\n            ").concat(t.style, "\n          }\n        ");
+        styleText += `
+          @media (min-width: ${bp.sm}px) {
+            ${t.style}
+          }
+        `;
       }
 
       t = baseStyleText(lg, lgGrow, lgGutterX, lgGutterY);
 
       if (!t.empty) {
-        styleText += "\n          @media (min-width: ".concat(bp.md, "px) {\n            ").concat(t.style, "\n          }\n        ");
+        styleText += `
+          @media (min-width: ${bp.md}px) {
+            ${t.style}
+          }
+        `;
       }
 
       t = baseStyleText(xl, xlGrow, xlGutterX, xlGutterY);
 
       if (!t.empty) {
-        styleText += "\n          @media (min-width: ".concat(bp.lg, "px) {\n            ").concat(t.style, "\n          }\n        ");
+        styleText += `
+          @media (min-width: ${bp.lg}px) {
+            ${t.style}
+          }
+        `;
       } // 
 
 
-      return "<style type=\"text/css\">".concat(styleText, "</style>").replace(/\n/g, '');
+      return `<style type="text/css">${styleText}</style>`.replace(/\n/g, '');
     }
 
   },
@@ -519,10 +541,10 @@ var script$1 = {
 
       if (hp.isNumber(width)) {
         if (width <= 1) {
-          var reduce = ifNeedReduceColWidth ? " - ".concat(this.colWidthReduce, "px") : '';
-          return "calc(100% * ".concat(width, " - ").concat(gutterX, "px").concat(reduce, ")");
+          const reduce = ifNeedReduceColWidth ? ` - ${this.colWidthReduce}px` : '';
+          return `calc(100% * ${width} - ${gutterX}px${reduce})`;
         } else {
-          return "".concat(width, "px");
+          return `${width}px`;
         }
       } else {
         return width; // such as 100px, 100em, 10cm
@@ -536,10 +558,10 @@ var script$1 = {
 };
 
 /* script */
-var __vue_script__$1 = script$1;
+const __vue_script__$1 = script$1;
 /* template */
 
-var __vue_render__$1 = function __vue_render__() {
+var __vue_render__$1 = function () {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -564,23 +586,23 @@ var __vue_staticRenderFns__$1 = [];
 __vue_render__$1._withStripped = true;
 /* style */
 
-var __vue_inject_styles__$1 = undefined;
+const __vue_inject_styles__$1 = undefined;
 /* scoped */
 
-var __vue_scope_id__$1 = undefined;
+const __vue_scope_id__$1 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$1 = undefined;
+const __vue_module_identifier__$1 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__$1 = false;
+const __vue_is_functional_template__$1 = false;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__$1 = __vue_normalize__({
+const __vue_component__$1 = __vue_normalize__({
   render: __vue_render__$1,
   staticRenderFns: __vue_staticRenderFns__$1
 }, __vue_inject_styles__$1, __vue_script__$1, __vue_scope_id__$1, __vue_is_functional_template__$1, __vue_module_identifier__$1, false, undefined, undefined, undefined);
@@ -607,13 +629,13 @@ var script$2 = {
 
   data() {
     return {
-      className: "cr-break-row-".concat(this._uid)
+      className: `cr-break-row-${this._uid}`
     };
   },
 
   computed: {
     styleText() {
-      var {
+      const {
         xs,
         sm,
         md,
@@ -622,30 +644,50 @@ var script$2 = {
       } = this;
 
       if (xs || sm || md || lg || xl) {
-        var styleText = ".".concat(this.className, "{display: none;}");
-        var bp = this.$parent.breakPoints;
+        let styleText = `.${this.className}{display: none;}`;
+        const bp = this.$parent.breakPoints;
 
         if (xs) {
-          styleText += "\n            @media (max-width: ".concat(bp.xs, "px){\n              .").concat(this.className, "{display: block;}\n            }\n          ");
+          styleText += `
+            @media (max-width: ${bp.xs}px){
+              .${this.className}{display: block;}
+            }
+          `;
         }
 
         if (sm) {
-          styleText += "\n            @media (max-width: ".concat(bp.sm, "px) and (min-width: ").concat(bp.xs, "px){\n              .").concat(this.className, "{display: block;}\n            }\n          ");
+          styleText += `
+            @media (max-width: ${bp.sm}px) and (min-width: ${bp.xs}px){
+              .${this.className}{display: block;}
+            }
+          `;
         }
 
         if (md) {
-          styleText += "\n            @media (max-width: ".concat(bp.md, "px) and (min-width: ").concat(bp.sm, "px){\n              .").concat(this.className, "{display: block;}\n            }\n          ");
+          styleText += `
+            @media (max-width: ${bp.md}px) and (min-width: ${bp.sm}px){
+              .${this.className}{display: block;}
+            }
+          `;
         }
 
         if (lg) {
-          styleText += "\n            @media (max-width: ".concat(bp.lg, "px) and (min-width: ").concat(bp.md, "px){\n              .").concat(this.className, "{display: block;}\n            }\n          ");
+          styleText += `
+            @media (max-width: ${bp.lg}px) and (min-width: ${bp.md}px){
+              .${this.className}{display: block;}
+            }
+          `;
         }
 
         if (xl) {
-          styleText += "\n            @media (min-width: ".concat(bp.lg, "px){\n              .").concat(this.className, "{display: block;}\n            }\n          ");
+          styleText += `
+            @media (min-width: ${bp.lg}px){
+              .${this.className}{display: block;}
+            }
+          `;
         }
 
-        return "<style type=\"text/css\">".concat(styleText, "</style>").replace(/\n/g, '');
+        return `<style type="text/css">${styleText}</style>`.replace(/\n/g, '');
       }
     }
 
@@ -653,10 +695,10 @@ var script$2 = {
 };
 
 /* script */
-var __vue_script__$2 = script$2;
+const __vue_script__$2 = script$2;
 /* template */
 
-var __vue_render__$2 = function __vue_render__() {
+var __vue_render__$2 = function () {
   var _vm = this;
 
   var _h = _vm.$createElement;
@@ -681,23 +723,23 @@ var __vue_staticRenderFns__$2 = [];
 __vue_render__$2._withStripped = true;
 /* style */
 
-var __vue_inject_styles__$2 = undefined;
+const __vue_inject_styles__$2 = undefined;
 /* scoped */
 
-var __vue_scope_id__$2 = undefined;
+const __vue_scope_id__$2 = undefined;
 /* module identifier */
 
-var __vue_module_identifier__$2 = undefined;
+const __vue_module_identifier__$2 = undefined;
 /* functional template */
 
-var __vue_is_functional_template__$2 = false;
+const __vue_is_functional_template__$2 = false;
 /* style inject */
 
 /* style inject SSR */
 
 /* style inject shadow dom */
 
-var __vue_component__$2 = __vue_normalize__({
+const __vue_component__$2 = __vue_normalize__({
   render: __vue_render__$2,
   staticRenderFns: __vue_staticRenderFns__$2
 }, __vue_inject_styles__$2, __vue_script__$2, __vue_scope_id__$2, __vue_is_functional_template__$2, __vue_module_identifier__$2, false, undefined, undefined, undefined);

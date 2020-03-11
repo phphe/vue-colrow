@@ -1,7 +1,7 @@
 {
   "name": "vue-colrow",
-  "version": "2.0.0",
-  "description": "A draggable sortable nested vue tree component.",
+  "version": "2.0.1",
+  "description": "Smarter vue layout components. Based on css flexbox. Support responsive design, server side render.",
   "main": "dist/vue-colrow.cjs.js",
   "module": "dist/vue-colrow.esm.js",
   "files": [
@@ -20,12 +20,23 @@
     "dev": "vue-cli-service serve",
     "build:web": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "build": "rogo"
+    "compile-scripts": "tsc --target ES6 --module CommonJS scripts/build.ts",
+    "build": "rollup -c scripts/build.js & node scripts/build.js --report"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.7",
     "helper-js": "^1.4.33",
     "vue-runtime-helpers": "^1.1.2"
+  },
+  "browserslist": {
+    "production": [
+      "defaults"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
@@ -33,8 +44,9 @@
     "@vuepress/plugin-google-analytics": "^1.3.1",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
-    "rogo": "^1.0.4",
+    "rogo": "^2.0.0",
     "rollup-plugin-vue": "^5.1.1",
+    "rollup-plugin-postcss": "^2.4.1",
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
     "vue": "^2.6.10",
