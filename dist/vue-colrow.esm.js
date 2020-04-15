@@ -1,16 +1,13 @@
 /*!
- * vue-colrow v2.0.2
+ * vue-colrow v2.0.3
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
+ * Homepage: undefined
  * Released under the MIT License.
  */
-import { getBoundingClientRect, isArray, onDOM, offDOM, isNumber } from 'helper-js';
+import { isNode, getBoundingClientRect, isArray, onDOM, offDOM, isNumber } from 'helper-js';
 import __vue_normalize__ from 'vue-runtime-helpers/dist/normalize-component.mjs';
 
 // detect if need reduce col width
-// detect browsers, from: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
-function isNode() {
-  return typeof module !== 'undefined' && module.exports;
-}
 
 function isFirefox() {
   return typeof InstallTrigger !== 'undefined';
@@ -37,7 +34,9 @@ function isChrome() {
 // hp.removeEl(div)
 
 
-var detectIfNeedReduceColWidth = (() => Boolean(!isNode() && !isChrome() && !isSafari() && !isFirefox()));
+var detectIfNeedReduceColWidth = (function () {
+  return Boolean(!isNode() && !isChrome() && !isSafari() && !isFirefox());
+});
 
 //
 var ifNeedReduceColWidth = detectIfNeedReduceColWidth();
@@ -67,28 +66,23 @@ var script = {
   ROW_HEIGHT_CALCULATION: true,
   props: {
     gutter: {
-      default() {
+      default: function _default() {
         return [config.DEFAULT_GUTTER_X, config.DEFAULT_GUTTER_Y];
       },
-
       type: [Number, Array]
     },
     heightCalculation: {
       type: Boolean,
-
-      default() {
+      default: function _default() {
         return config.ROW_HEIGHT_CALCULATION;
       }
-
     },
     // responsive
     breakPoints: {
       type: Object,
-
-      default() {
+      default: function _default() {
         return config.BREAK_POINTS;
       }
-
     },
     xsGutterX: {
       type: Number
@@ -121,70 +115,68 @@ var script = {
       type: Number
     }
   },
-
   // components: {},
-  data() {
+  data: function data() {
+    var _this = this;
+
     return {
       gutterX: null,
       gutterY: null,
       className: "cr-row-".concat(this._uid),
       innerHeight: null,
-      updateInnerHeight: () => {
-        var {
-          inner
-        } = this.$refs;
+      updateInnerHeight: function updateInnerHeight() {
+        var inner = _this.$refs.inner;
 
         if (inner) {
           var h = getBoundingClientRect(inner).height;
 
-          if (h !== this.innerHeight) {
-            this.innerHeight = h;
+          if (h !== _this.innerHeight) {
+            _this.innerHeight = h;
           }
         }
       }
     };
   },
-
   computed: {
-    styleText() {
-      var baseStyleText = (gutterX, gutterY) => {
+    styleText: function styleText() {
+      var _this2 = this;
+
+      var baseStyleText = function baseStyleText(gutterX, gutterY) {
         if (gutterX == null) {
-          gutterX = this.gutterX;
+          gutterX = _this2.gutterX;
         }
 
         if (gutterY == null) {
-          gutterY = this.gutterY;
+          gutterY = _this2.gutterY;
         }
 
-        var styleText = ".".concat(this.className, "{\n");
+        var styleText = ".".concat(_this2.className, "{\n");
         styleText += "margin-right: -".concat(gutterX, "px;");
 
-        if (this.innerHeight == null) {
+        if (_this2.innerHeight == null) {
           styleText += "margin-bottom: -".concat(gutterY, "px;");
-        } else if (this.innerHeight !== 0) {
-          styleText += "height: ".concat(this.innerHeight - gutterY, "px;");
+        } else if (_this2.innerHeight !== 0) {
+          styleText += "height: ".concat(_this2.innerHeight - gutterY, "px;");
         }
 
         styleText += "}";
-        styleText += ".".concat(this.className, " > .cr-row-inner{\n          width: calc(100% + ").concat(gutterX, "px);\n        }");
+        styleText += ".".concat(_this2.className, " > .cr-row-inner{\n          width: calc(100% + ").concat(gutterX, "px);\n        }");
         return styleText;
       };
 
       var styleText = baseStyleText(this.gutterX, this.gutterY); // responsive
 
       var bp = this.breakPoints;
-      var {
-        xsGutterX,
-        xsGutterY,
-        smGutterX,
-        smGutterY,
-        mdGutterX,
-        mdGutterY,
-        lgGutterX,
-        lgGutterY,
-        xlGutterX,
-        xlGutterY
-      } = this;
+      var xsGutterX = this.xsGutterX,
+          xsGutterY = this.xsGutterY,
+          smGutterX = this.smGutterX,
+          smGutterY = this.smGutterY,
+          mdGutterX = this.mdGutterX,
+          mdGutterY = this.mdGutterY,
+          lgGutterX = this.lgGutterX,
+          lgGutterY = this.lgGutterY,
+          xlGutterX = this.xlGutterX,
+          xlGutterY = this.xlGutterY;
 
       if (xsGutterX != null || xsGutterY != null) {
         styleText += "@media (max-width: ".concat(bp.xs, "px) {").concat(baseStyleText(xsGutterX, xsGutterY), "}");
@@ -209,14 +201,12 @@ var script = {
 
       return "<style type=\"text/css\">".concat(styleText, "</style>").replace(/\n/g, '');
     }
-
   },
   watch: {
     gutter: {
       immediate: true,
       deep: true,
-
-      handler(gutter) {
+      handler: function handler(gutter) {
         var t = isArray(gutter) ? gutter : [gutter, gutter];
 
         if (t[0] == null) {
@@ -230,13 +220,13 @@ var script = {
         this.gutterX = t[0];
         this.gutterY = t[1];
       }
-
     }
   },
-
   // methods: {},
   // created() {},
-  mounted() {
+  mounted: function mounted() {
+    var _this3 = this;
+
     if (this.heightCalculation) {
       this.updateInnerHeight();
       onDOM(window, 'resize', this.updateInnerHeight);
@@ -251,8 +241,8 @@ var script = {
           subtree: true
         }; // Callback function to execute when mutations are observed
 
-        var callback = (mutationsList, observer) => {
-          this.updateInnerHeight();
+        var callback = function callback(mutationsList, observer) {
+          _this3.updateInnerHeight();
         }; // Create an observer instance linked to the callback function
 
 
@@ -263,8 +253,7 @@ var script = {
       }
     }
   },
-
-  beforeDestroy() {
+  beforeDestroy: function beforeDestroy() {
     offDOM(window, 'resize', this.updateInnerHeight);
 
     if (this._heightCalculation_observer) {
@@ -274,7 +263,6 @@ var script = {
       observer.disconnect();
     }
   }
-
 };
 
 /* script */
@@ -373,24 +361,22 @@ var script$1 = {
     },
     colWidthReduce: {
       type: Number,
-
-      default() {
+      default: function _default() {
         return config.COL_WIDTH_REDUCE;
       }
-
     }
   },
-
   // components: {},
-  data() {
+  data: function data() {
     return {
       className: "cr-col-".concat(this._uid)
     };
   },
-
   computed: {
-    styleText() {
-      var baseStyleText = (width, grow, gutterX, gutterY) => {
+    styleText: function styleText() {
+      var _this = this;
+
+      var baseStyleText = function baseStyleText(width, grow, gutterX, gutterY) {
         var empty = true;
         var styles = [];
 
@@ -409,7 +395,7 @@ var script$1 = {
         }
 
         if (width != null || gutterX != null) {
-          styles.push("width: ".concat(this.widthText(width, gutterX), ";"));
+          styles.push("width: ".concat(_this.widthText(width, gutterX), ";"));
           empty = false;
         }
 
@@ -422,10 +408,10 @@ var script$1 = {
           empty = false;
         }
 
-        var style = ".".concat(this.className, "{").concat(styles.join(''), "}");
+        var style = ".".concat(_this.className, "{").concat(styles.join(''), "}");
         return {
-          empty,
-          style
+          empty: empty,
+          style: style
         };
       };
 
@@ -439,30 +425,27 @@ var script$1 = {
       styleText += baseStyleText(w, this.grow, this.$parent.gutterX, this.$parent.gutterY).style; // responsive
 
       var bp = this.$parent.breakPoints;
-      var {
-        xs,
-        xsGrow,
-        sm,
-        smGrow,
-        md,
-        mdGrow,
-        lg,
-        lgGrow,
-        xl,
-        xlGrow
-      } = this;
-      var {
-        xsGutterX,
-        xsGutterY,
-        smGutterX,
-        smGutterY,
-        mdGutterX,
-        mdGutterY,
-        lgGutterX,
-        lgGutterY,
-        xlGutterX,
-        xlGutterY
-      } = this.$parent;
+      var xs = this.xs,
+          xsGrow = this.xsGrow,
+          sm = this.sm,
+          smGrow = this.smGrow,
+          md = this.md,
+          mdGrow = this.mdGrow,
+          lg = this.lg,
+          lgGrow = this.lgGrow,
+          xl = this.xl,
+          xlGrow = this.xlGrow;
+      var _this$$parent = this.$parent,
+          xsGutterX = _this$$parent.xsGutterX,
+          xsGutterY = _this$$parent.xsGutterY,
+          smGutterX = _this$$parent.smGutterX,
+          smGutterY = _this$$parent.smGutterY,
+          mdGutterX = _this$$parent.mdGutterX,
+          mdGutterY = _this$$parent.mdGutterY,
+          lgGutterX = _this$$parent.lgGutterX,
+          lgGutterY = _this$$parent.lgGutterY,
+          xlGutterX = _this$$parent.xlGutterX,
+          xlGutterY = _this$$parent.xlGutterY;
       var t;
       t = baseStyleText(xs, xsGrow, xsGutterX, xsGutterY);
 
@@ -497,12 +480,11 @@ var script$1 = {
 
       return "<style type=\"text/css\">".concat(styleText, "</style>").replace(/\n/g, '');
     }
-
   },
   // watch: {},
   methods: {
     // convert width to css text
-    widthText(width, gutterX) {
+    widthText: function widthText(width, gutterX) {
       if (width == null) {
         width = this.width;
       }
@@ -522,7 +504,6 @@ var script$1 = {
         return width; // such as 100px, 100em, 10cm
       }
     }
-
   } // created() {},
   // mounted() {},
   // beforeDestroy() {},
@@ -598,22 +579,18 @@ var script$2 = {
       type: Boolean
     }
   },
-
-  data() {
+  data: function data() {
     return {
       className: "cr-break-row-".concat(this._uid)
     };
   },
-
   computed: {
-    styleText() {
-      var {
-        xs,
-        sm,
-        md,
-        lg,
-        xl
-      } = this;
+    styleText: function styleText() {
+      var xs = this.xs,
+          sm = this.sm,
+          md = this.md,
+          lg = this.lg,
+          xl = this.xl;
 
       if (xs || sm || md || lg || xl) {
         var styleText = ".".concat(this.className, "{display: none;}");
@@ -642,7 +619,6 @@ var script$2 = {
         return "<style type=\"text/css\">".concat(styleText, "</style>").replace(/\n/g, '');
       }
     }
-
   }
 };
 
