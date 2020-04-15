@@ -1,10 +1,12 @@
 /*!
- * vue-colrow v2.0.4
+ * vue-colrow v2.0.5
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Homepage: undefined
  * Released under the MIT License.
  */
-import { isNode, isWindowDefined, getBoundingClientRect, isArray, onDOM, offDOM, isNumber } from 'helper-js';
+import _regeneratorRuntime from '@babel/runtime/regenerator';
+import _asyncToGenerator from '@babel/runtime/helpers/asyncToGenerator';
+import { isNode, isWindowDefined, strRand, getBoundingClientRect, isArray, onDOM, offDOM, isNumber } from 'helper-js';
 import __vue_normalize__ from 'vue-runtime-helpers/dist/normalize-component.mjs';
 
 // detect if need reduce col width
@@ -38,7 +40,6 @@ var detectIfNeedReduceColWidth = (function () {
   return Boolean(!isNode() && isWindowDefined() && !isChrome() && !isSafari() && !isFirefox());
 });
 
-//
 var ifNeedReduceColWidth = detectIfNeedReduceColWidth();
 var config = {
   DEFAULT_GUTTER_X: 16,
@@ -122,7 +123,7 @@ var script = {
     return {
       gutterX: null,
       gutterY: null,
-      className: "cr-row-".concat(this._uid),
+      className: "cr-row-".concat(strRand()),
       innerHeight: null,
       updateInnerHeight: function updateInnerHeight() {
         var inner = _this.$refs.inner;
@@ -227,31 +228,53 @@ var script = {
   mounted: function mounted() {
     var _this3 = this;
 
-    if (this.heightCalculation) {
-      this.updateInnerHeight();
-      onDOM(window, 'resize', this.updateInnerHeight);
+    return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee() {
+      var targetNode, _config, callback, observer;
 
-      if (window.MutationObserver && !this._heightCalculation_observer) {
-        // Select the node that will be observed for mutations
-        var targetNode = document.body.parentElement; // Options for the observer (which mutations to observe)
+      return _regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _this3.className = "cr-row-".concat(strRand()); // make root element update when in nuxt
 
-        var _config = {
-          attributes: true,
-          childList: true,
-          subtree: true
-        }; // Callback function to execute when mutations are observed
+              _context.next = 3;
+              return _this3.$nextTick();
 
-        var callback = function callback(mutationsList, observer) {
-          _this3.updateInnerHeight();
-        }; // Create an observer instance linked to the callback function
+            case 3:
+              if (_this3.heightCalculation) {
+                _this3.updateInnerHeight();
+
+                onDOM(window, 'resize', _this3.updateInnerHeight);
+
+                if (window.MutationObserver && !_this3._heightCalculation_observer) {
+                  // Select the node that will be observed for mutations
+                  targetNode = document.body.parentElement; // Options for the observer (which mutations to observe)
+
+                  _config = {
+                    attributes: true,
+                    childList: true,
+                    subtree: true
+                  }; // Callback function to execute when mutations are observed
+
+                  callback = function callback(mutationsList, observer) {
+                    _this3.updateInnerHeight();
+                  }; // Create an observer instance linked to the callback function
 
 
-        var observer = new MutationObserver(callback); // Start observing the target node for configured mutations
+                  observer = new MutationObserver(callback); // Start observing the target node for configured mutations
 
-        observer.observe(targetNode, _config);
-        this._heightCalculation_observer = observer;
-      }
-    }
+                  observer.observe(targetNode, _config);
+                  _this3._heightCalculation_observer = observer;
+                }
+              }
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
   },
   beforeDestroy: function beforeDestroy() {
     offDOM(window, 'resize', this.updateInnerHeight);
@@ -369,7 +392,7 @@ var script$1 = {
   // components: {},
   data: function data() {
     return {
-      className: "cr-col-".concat(this._uid)
+      className: "cr-col-".concat(strRand())
     };
   },
   computed: {
@@ -504,9 +527,11 @@ var script$1 = {
         return width; // such as 100px, 100em, 10cm
       }
     }
-  } // created() {},
-  // mounted() {},
-  // beforeDestroy() {},
+  },
+  // created() {},
+  mounted: function mounted() {
+    this.className = "cr-col-".concat(strRand()); // make root element update when in nuxt
+  } // beforeDestroy() {},
 
 };
 
@@ -581,7 +606,7 @@ var script$2 = {
   },
   data: function data() {
     return {
-      className: "cr-break-row-".concat(this._uid)
+      className: "cr-break-row-".concat(strRand())
     };
   },
   computed: {
@@ -619,6 +644,9 @@ var script$2 = {
         return "<style type=\"text/css\">".concat(styleText, "</style>").replace(/\n/g, '');
       }
     }
+  },
+  mounted: function mounted() {
+    this.className = "cr-break-row-".concat(strRand()); // make root element update when in nuxt
   }
 };
 

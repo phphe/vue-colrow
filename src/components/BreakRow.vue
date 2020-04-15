@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      className: `cr-break-row-${this._uid}`,
+      className: `cr-break-row-${hp.strRand()}`,
     }
   },
   computed: {
@@ -64,6 +64,9 @@ export default {
         return `<style type="text/css">${styleText}</style>`.replace(/\n/g, '')
       }
     },
+  },
+  mounted() {
+    this.className = `cr-break-row-${hp.strRand()}` // make root element update when in nuxt
   },
 }
 </script>

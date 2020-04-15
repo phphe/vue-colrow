@@ -55,7 +55,7 @@ export default {
     return {
       gutterX: null,
       gutterY: null,
-      className: `cr-row-${this._uid}`,
+      className: `cr-row-${hp.strRand()}`,
       innerHeight: null,
       updateInnerHeight: () => {
         const {inner} = this.$refs
@@ -132,7 +132,9 @@ export default {
   },
   // methods: {},
   // created() {},
-  mounted() {
+  async mounted() {
+    this.className = `cr-row-${hp.strRand()}` // make root element update when in nuxt
+    await this.$nextTick()
     if (this.heightCalculation) {
       this.updateInnerHeight()
       hp.onDOM(window, 'resize', this.updateInnerHeight)

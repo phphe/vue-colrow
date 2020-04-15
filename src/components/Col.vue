@@ -29,7 +29,7 @@ export default {
   // components: {},
   data() {
     return {
-      className: `cr-col-${this._uid}`,
+      className: `cr-col-${hp.strRand()}`,
     }
   },
   computed: {
@@ -141,7 +141,9 @@ export default {
     },
   },
   // created() {},
-  // mounted() {},
+  mounted() {
+    this.className = `cr-col-${hp.strRand()}` // make root element update when in nuxt
+  },
   // beforeDestroy() {},
 }
 </script>
