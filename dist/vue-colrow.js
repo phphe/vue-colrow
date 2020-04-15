@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v2.0.3
+ * vue-colrow v2.0.4
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Homepage: undefined
  * Released under the MIT License.
@@ -825,11 +825,33 @@
   });
 
   /*!
-   * helper-js v1.4.36
+   * helper-js v1.4.37
    * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
    * Homepage: undefined
    * Released under the MIT License.
    */
+
+
+  var store = {}; // get global
+  // `this` !== global or window because of build tool
+
+  function glb() {
+    if (store.glb) {
+      return store.glb;
+    } else {
+      // resolve global
+      var t;
+
+      try {
+        t = global;
+      } catch (e) {
+        t = window;
+      }
+
+      store.glb = t;
+      return t;
+    }
+  }
 
   function isArray(v) {
     return Object.prototype.toString.call(v) === '[object Array]';
@@ -894,8 +916,16 @@
     }
   }
 
+  function isWindowDefined() {
+    try {
+      return window && true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   function isNode() {
-    return Boolean(typeof global.module !== 'undefined' && global.module.exports);
+    return Boolean(typeof glb().module !== 'undefined' && glb().module.exports);
   }
 
   // detect if need reduce col width
@@ -926,7 +956,7 @@
 
 
   var detectIfNeedReduceColWidth = (function () {
-    return Boolean(!isNode() && !isChrome() && !isSafari() && !isFirefox());
+    return Boolean(!isNode() && isWindowDefined() && !isChrome() && !isSafari() && !isFirefox());
   });
 
   //

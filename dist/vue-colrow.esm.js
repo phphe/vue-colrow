@@ -1,10 +1,10 @@
 /*!
- * vue-colrow v2.0.3
+ * vue-colrow v2.0.4
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Homepage: undefined
  * Released under the MIT License.
  */
-import { isNode, getBoundingClientRect, isArray, onDOM, offDOM, isNumber } from 'helper-js';
+import { isNode, isWindowDefined, getBoundingClientRect, isArray, onDOM, offDOM, isNumber } from 'helper-js';
 import __vue_normalize__ from 'vue-runtime-helpers/dist/normalize-component.mjs';
 
 // detect if need reduce col width
@@ -35,7 +35,7 @@ function isChrome() {
 
 
 var detectIfNeedReduceColWidth = (function () {
-  return Boolean(!isNode() && !isChrome() && !isSafari() && !isFirefox());
+  return Boolean(!isNode() && isWindowDefined() && !isChrome() && !isSafari() && !isFirefox());
 });
 
 //

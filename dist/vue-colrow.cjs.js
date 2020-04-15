@@ -1,5 +1,5 @@
 /*!
- * vue-colrow v2.0.3
+ * vue-colrow v2.0.4
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Homepage: undefined
  * Released under the MIT License.
@@ -41,7 +41,7 @@ function isChrome() {
 
 
 var detectIfNeedReduceColWidth = (function () {
-  return Boolean(!hp.isNode() && !isChrome() && !isSafari() && !isFirefox());
+  return Boolean(!hp.isNode() && hp.isWindowDefined() && !isChrome() && !isSafari() && !isFirefox());
 });
 
 //
